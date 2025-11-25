@@ -1,0 +1,1114 @@
+V1 Phase Vector
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime-Phase Vector Visualization Tool - Mathematical Research Explorer</title>
+    <style>
+        :root {
+            --bg-color: #0a0e1a;
+            --text-color: #e2e8f0;
+            --panel-bg: #1a1f2e;
+            --panel-border: #2d3748;
+            --accent-color: #4ECDC4;
+            --rh-zero: #FFD700;
+            --highlight: #667eea;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a1f2e 0%, #2d3748 100%);
+            border-bottom: 3px solid var(--accent-color);
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header .subtitle {
+            font-size: 1.1em;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 5px;
+        }
+
+        .header .author {
+            font-size: 1em;
+            color: var(--rh-zero);
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .sidebar {
+            width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex-shrink: 0;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--panel-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--panel-border);
+        }
+
+        .card h2 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 8px;
+            font-size: 1.4em;
+        }
+
+        .card h3 {
+            color: var(--rh-zero);
+            margin-top: 20px;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .slider-group {
+            margin-bottom: 20px;
+        }
+
+        .slider-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .slider-group input[type="range"] {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .slider-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .slider-group input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+
+        .slider-note {
+            font-size: 0.8em;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        .key-figure {
+            font-size: 1.8em;
+            color: var(--rh-zero);
+            font-weight: bold;
+            margin: 10px 0;
+            text-align: center;
+            padding: 10px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .heuristic-box {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px dashed rgba(255, 215, 0, 0.5);
+            border-radius: 8px;
+            font-size: 0.9em;
+            background: rgba(255, 215, 0, 0.05);
+        }
+
+        .canvas-container {
+            position: relative;
+            background: #000000;
+            border-radius: 8px;
+            border: 1px solid var(--panel-border);
+            padding: 10px;
+        }
+
+        #canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+
+        .canvas-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .canvas-controls input {
+            flex: 1;
+            min-width: 150px;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--accent-color);
+            color: var(--text-color);
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: var(--accent-color);
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: #3db8af;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--highlight);
+        }
+
+        .btn-secondary:hover {
+            background: #5568d3;
+        }
+
+        .export-section {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-box {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(78, 205, 196, 0.2);
+            transition: all 0.2s;
+        }
+
+        .stat-box:hover {
+            border-color: var(--accent-color);
+            background: rgba(78, 205, 196, 0.05);
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.4em;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .stat-note {
+            font-size: 0.75em;
+            opacity: 0.6;
+            margin-top: 3px;
+            font-style: italic;
+        }
+
+        .legend-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 30px;
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        .vector-status {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9em;
+            opacity: 0.9;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+        }
+
+        .description-text {
+            font-size: 0.95em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .math-notation {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            font-size: 1.1em;
+            color: var(--accent-color);
+            text-align: center;
+            padding: 15px;
+            background: rgba(78, 205, 196, 0.05);
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Prime-Phase Vector Visualization Tool</h1>
+    <div class="subtitle">Mathematical Research Explorer: Riemann Hypothesis & Modular Arithmetic</div>
+    <div class="author">by Wessen Getachew</div>
+</div>
+
+<div class="container">
+    
+    <div class="sidebar">
+        
+        <div class="card">
+            <h2>Vector Parameters</h2>
+
+            <div class="slider-group">
+                <label>Modulus Ring M: <span id="modulusValue">37</span></label>
+                <input type="range" id="modulusSlider" min="5" max="100" step="1" value="37">
+            </div>
+
+            <div class="slider-group">
+                <label>Critical Line Height t: <span id="heightTValue">14.1347</span></label>
+                <input type="range" id="heightTSlider" min="14.0" max="14.5" step="0.0001" value="14.1347">
+                <div class="slider-note">First non-trivial zero of ζ(s)</div>
+            </div>
+
+            <div class="slider-group">
+                <label>Prime Cutoff X: <span id="cutoffXValue">200</span></label>
+                <input type="range" id="cutoffXSlider" min="20" max="1000" step="10" value="200">
+                <div class="slider-note">Maximum prime in summation</div>
+            </div>
+            
+            <h3>Current Diagnostic Scores</h3>
+            
+            <label>Total Vector Magnitude (|P_t|):</label>
+            <div class="key-figure" id="magnitudeOutput">--</div>
+            
+            <label>Coherence Score (C_t):</label>
+            <div class="key-figure" id="coherenceOutput">--</div>
+            
+            <div class="heuristic-box">
+                <p><strong>Heuristic Test:</strong> When t is near a zero (e.g., 14.1347), the summation tends to minimize its magnitude, resulting in a low |P_t| and high C_t (alignment).</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="main-content">
+        
+        <div class="card">
+            <h2>Prime-Phase Vector Plot (P_t(M))</h2>
+            
+            <div class="canvas-controls">
+                <input type="text" id="canvasTitle" placeholder="Custom title (optional)" value="Prime-Phase Vector Field">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="showLegend" checked>
+                    <label for="showLegend">Show Legend</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="showGrid" checked>
+                    <label for="showGrid">Show Grid</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="showPath" checked>
+                    <label for="showPath">Show Path</label>
+                </div>
+            </div>
+            
+            <div class="canvas-container">
+                <canvas id="canvas" width="900" height="600"></canvas>
+            </div>
+            
+            <div class="legend-box">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #FFD700; height: 3px;"></div>
+                    <span>Final Vector P_t(M)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: rgba(255,255,255,0.3);"></div>
+                    <span>Summation Path</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: rgba(255,255,255,0.2); height: 1px;"></div>
+                    <span>Unit Circle & Axes</span>
+                </div>
+            </div>
+            
+            <div class="vector-status" id="vectorStatus">
+                Vector End: (0.0000, 0.0000) | Phase: 0.00° | Magnitude: 0.0000
+            </div>
+            
+            <div class="export-section">
+                <button class="btn" onclick="exportCanvasPNG()">Export Canvas (PNG)</button>
+                <button class="btn btn-secondary" onclick="exportCanvasSVG()">Export Canvas (SVG)</button>
+                <button class="btn" onclick="exportDataCSV()">Export Data (CSV)</button>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Statistical Analysis Dashboard</h2>
+            
+            <h3>Vector Dynamics</h3>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-label">Prime Count</div>
+                    <div class="stat-value" id="primeCount">--</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-label">Path Length</div>
+                    <div class="stat-value" id="pathLength">--</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-label">Efficiency Ratio</div>
+                    <div class="stat-value" id="efficiencyRatio">--</div>
+                    <div class="stat-note">|P_t| / PathLength</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-label">Mean Contribution</div>
+                    <div class="stat-value" id="meanContrib">--</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-label">Std Dev (Real)</div>
+                    <div class="stat-value" id="stdReal">--</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-label">Std Dev (Imag)</div>
+                    <div class="stat-value" id="stdImag">--</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-label">Max Excursion</div>
+                    <div class="stat-value" id="maxExcursion">--</div>
+                    <div class="stat-note">Furthest from origin</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-label">Winding Number</div>
+                    <div class="stat-value" id="windingNumber">--</div>
+                    <div class="stat-note">Net rotations</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-label">Directional Bias</div>
+                    <div class="stat-value" id="directionalBias">--</div>
+                    <div class="stat-note">Quadrant preference</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-label">Cancellation Index</div>
+                    <div class="stat-value" id="cancellationIndex">--</div>
+                    <div class="stat-note">1 - (|sum| / Σ|terms|)</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-label">Angular Momentum</div>
+                    <div class="stat-value" id="angularMomentum">--</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-label">Tortuosity</div>
+                    <div class="stat-value" id="tortuosity">--</div>
+                    <div class="stat-note">PathLength / |P_t|</div>
+                </div>
+            </div>
+            
+            <h3>Prime Distribution Metrics</h3>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-label">Largest Prime</div>
+                    <div class="stat-value" id="largestPrime">--</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-label">Prime Density</div>
+                    <div class="stat-value" id="primeDensity">--</div>
+                    <div class="stat-note">π(X) / X</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-label">Li(X) Estimate</div>
+                    <div class="stat-value" id="liEstimate">--</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-label">Estimate Error</div>
+                    <div class="stat-value" id="estimateError">--</div>
+                    <div class="stat-note">π(X) - Li(X)</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-label">Avg Prime Gap</div>
+                    <div class="stat-value" id="avgGap">--</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-label">Max Prime Gap</div>
+                    <div class="stat-value" id="maxGap">--</div>
+                </div>
+            </div>
+            
+            <h3>Modular Structure Analysis</h3>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-label">φ(M) (Totient)</div>
+                    <div class="stat-value" id="totient">--</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-label">Primitive Roots</div>
+                    <div class="stat-value" id="primitiveRoots">--</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-label">Residue Coverage</div>
+                    <div class="stat-value" id="residueCoverage">--</div>
+                    <div class="stat-note">Unique p mod M</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-label">Quadratic Residues</div>
+                    <div class="stat-value" id="quadResidues">--</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-label">M-Periodicity Score</div>
+                    <div class="stat-value" id="periodicityScore">--</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-label">Residue Entropy</div>
+                    <div class="stat-value" id="residueEntropy">--</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>The Prime-Phase Vector Explained</h2>
+            
+            <p class="description-text">The <strong>Prime-Phase Vector</strong> (P_t(M)) is a conceptual tool linking the discrete structure of the Modular Ring ℤ/Mℤ to the continuous behavior of the Riemann Zeta Function ζ(s).</p>
+            
+            <h3>1. The Modular Ring Component (M)</h3>
+            <p class="description-text">Your visualization involves the <strong>Modulus M</strong> (Ring ℤ/Mℤ). In number theory, the properties of these rings are governed by <strong>Dirichlet Characters (χ)</strong>. The vector's calculation is modulated by a simple M-dependent phase factor, which is analogous to a simplified Dirichlet character, ensuring that the prime's contribution respects the modular arithmetic of the ring.</p>
+            
+            <h3>2. The Critical Line Component (t)</h3>
+            <p class="description-text">The parameter <strong>Height t</strong> sets the imaginary part of the complex number s = 1/2 + it on the <strong>Critical Line</strong>. This is the central location for the search for non-trivial zeros of ζ(s), which are conjectured to govern prime distribution.</p>
+            
+            <h3>3. The Vector Summation</h3>
+            <p class="description-text">The vector P_t(M) is the result of summing complex numbers for every prime p up to the Cutoff X. Each prime contributes a small vector whose phase is dictated by t, and whose magnitude is related to 1/√p.</p>
+            
+            <div class="math-notation">
+                P_t(M) ≈ Σ_{p ≤ X} [Modulation(p, M) / p^(1/2 + it)]
+            </div>
+            
+            <p class="description-text">The sum starts at the origin (center) and accumulates the contribution of each prime, resulting in a random walk-like path (shown in light gray). The final position is the tip of P_t(M) (shown in yellow).</p>
+            
+            <h3>4. The Coherence Score</h3>
+            <p class="description-text">The <strong>Coherence Score (C_t)</strong> reflects the strength of the alignment of the prime vector components. A low final vector magnitude (low |P_t|) relative to the length of the path indicates that the individual prime vectors have largely cancelled each other out, suggesting a high degree of "coherence" or alignment in their complex phases. This cancellation is precisely what happens to an L-function when it is evaluated at a zero.</p>
+        </div>
+    </div>
+    
+</div>
+
+<div class="footer">
+    Prime-Phase Vector Visualization Tool | Mathematical Research Explorer<br>
+    © 2024 Wessen Getachew | Interactive Number Theory Visualization
+</div>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    let currentVectorData = null;
+
+    // Prime Sieve
+    function getPrimes(limit) {
+        if (limit < 2) return [];
+        const sieve = new Array(limit + 1).fill(true);
+        sieve[0] = sieve[1] = false;
+        for (let i = 2; i * i <= limit; i++) {
+            if (sieve[i]) {
+                for (let j = i * i; j <= limit; j += i) {
+                    sieve[j] = false;
+                }
+            }
+        }
+        const primes = [];
+        for (let i = 2; i <= limit; i++) {
+            if (sieve[i]) {
+                primes.push(i);
+            }
+        }
+        return primes;
+    }
+
+    // Euler's Totient Function
+    function eulerPhi(n) {
+        let result = n;
+        let temp = n;
+        for (let p = 2; p * p <= temp; p++) {
+            if (temp % p === 0) {
+                while (temp % p === 0) temp /= p;
+                result -= result / p;
+            }
+        }
+        if (temp > 1) result -= result / temp;
+        return Math.round(result);
+    }
+
+    // Count Primitive Roots
+    function countPrimitiveRoots(n) {
+        return eulerPhi(eulerPhi(n));
+    }
+
+    // Logarithmic Integral Approximation
+    function logIntegral(x) {
+        if (x <= 1) return 0;
+        const gamma = 0.5772156649;
+        let sum = gamma + Math.log(Math.log(x));
+        let term = 1;
+        for (let n = 1; n <= 50; n++) {
+            term *= Math.log(x) / n;
+            sum += term / n;
+            if (Math.abs(term / n) < 1e-10) break;
+        }
+        return sum;
+    }
+
+    // Calculate Prime-Phase Vector with comprehensive statistics
+    function calculatePrimePhaseVector(M, t, X) {
+        const primes = getPrimes(X);
+        let totalReal = 0;
+        let totalImaginary = 0;
+        let totalPathLength = 0;
+        let sumOfMagnitudes = 0;
+        let path = [{ real: 0, imag: 0 }];
+        
+        let realContribs = [];
+        let imagContribs = [];
+        let maxExcursion = 0;
+        let windingAngle = 0;
+        let lastAngle = 0;
+        let residueCounts = new Array(M).fill(0);
+        let primeGaps = [];
+        
+        for (let i = 0; i < primes.length; i++) {
+            const p = primes[i];
+            const magnitude = 1 / Math.sqrt(p);
+            const phase_t = -t * Math.log(p);
+            const phase_M = (2 * Math.PI * p) / M;
+            const combinedPhase = phase_t + phase_M;
+
+            const dReal = magnitude * Math.cos(combinedPhase);
+            const dImaginary = magnitude * Math.sin(combinedPhase);
+            
+            totalReal += dReal;
+            totalImaginary += dImaginary;
+            
+            realContribs.push(dReal);
+            imagContribs.push(dImaginary);
+            
+            const segmentLength = Math.sqrt(dReal * dReal + dImaginary * dImaginary);
+            totalPathLength += segmentLength;
+            sumOfMagnitudes += magnitude;
+            
+            path.push({ real: totalReal, imag: totalImaginary });
+            
+            const currentDist = Math.sqrt(totalReal * totalReal + totalImaginary * totalImaginary);
+            maxExcursion = Math.max(maxExcursion, currentDist);
+            
+            const currentAngle = Math.atan2(totalImaginary, totalReal);
+            if (i > 0) {
+                let angleDiff = currentAngle - lastAngle;
+                while (angleDiff > Math.PI) angleDiff -= 2 * Math.PI;
+                while (angleDiff < -Math.PI) angleDiff += 2 * Math.PI;
+                windingAngle += angleDiff;
+            }
+            lastAngle = currentAngle;
+            
+            residueCounts[p % M]++;
+            
+            if (i > 0) {
+                primeGaps.push(p - primes[i - 1]);
+            }
+        }
+
+        const finalMagnitude = Math.sqrt(totalReal * totalReal + totalImaginary * totalImaginary);
+        const coherence = (totalPathLength > 0) ? (1 - (finalMagnitude / totalPathLength)) : 0;
+        const cancellationIndex = (sumOfMagnitudes > 0) ? (1 - (finalMagnitude / sumOfMagnitudes)) : 0;
+        
+        const meanReal = realContribs.reduce((a, b) => a + b, 0) / realContribs.length;
+        const meanImag = imagContribs.reduce((a, b) => a + b, 0) / imagContribs.length;
+        const stdReal = Math.sqrt(realContribs.reduce((a, b) => a + (b - meanReal) ** 2, 0) / realContribs.length);
+        const stdImag = Math.sqrt(imagContribs.reduce((a, b) => a + (b - meanImag) ** 2, 0) / imagContribs.length);
+        
+        const windingNumber = windingAngle / (2 * Math.PI);
+        const angularMomentum = Math.abs(totalReal * totalImaginary);
+        
+        const quadrantCounts = [0, 0, 0, 0];
+        for (let i = 1; i < path.length; i++) {
+            const r = path[i].real;
+            const im = path[i].imag;
+            if (r >= 0 && im >= 0) quadrantCounts[0]++;
+            else if (r < 0 && im >= 0) quadrantCounts[1]++;
+            else if (r < 0 && im < 0) quadrantCounts[2]++;
+            else quadrantCounts[3]++;
+        }
+        const maxQuadrant = Math.max(...quadrantCounts);
+        const directionalBias = maxQuadrant / (path.length - 1);
+        
+        const nonZeroResidues = residueCounts.filter(c => c > 0).length;
+        const residueProbs = residueCounts.map(c => c / primes.length).filter(p => p > 0);
+        const residueEntropy = -residueProbs.reduce((sum, p) => sum + p * Math.log2(p), 0);
+        
+        const avgGap = primeGaps.length > 0 ? primeGaps.reduce((a, b) => a + b, 0) / primeGaps.length : 0;
+        const maxGap = primeGaps.length > 0 ? Math.max(...primeGaps) : 0;
+        
+        const Li_X = (X > 2) ? logIntegral(X) : 0;
+        
+        return {
+            real: totalReal,
+            imag: totalImaginary,
+            magnitude: finalMagnitude,
+            coherence: coherence,
+            path: path,
+            primes: primes,
+            primeCount: primes.length,
+            pathLength: totalPathLength,
+            cancellationIndex: cancellationIndex,
+            stdReal: stdReal,
+            stdImag: stdImag,
+            maxExcursion: maxExcursion,
+            windingNumber: windingNumber,
+            angularMomentum: angularMomentum,
+            directionalBias: directionalBias,
+            largestPrime: primes[primes.length - 1],
+            primeDensity: primes.length / X,
+            Li_X: Li_X,
+            avgGap: avgGap,
+            maxGap: maxGap,
+            totient: eulerPhi(M),
+            primitiveRootCount: countPrimitiveRoots(M),
+            residueCoverage: nonZeroResidues,
+            residueEntropy: residueEntropy,
+            periodicityScore: Math.abs(Math.sin(2 * Math.PI * primes.length / M)),
+            M: M,
+            t: t,
+            X: X
+        };
+    }
+
+    // Draw the visualization
+    function drawVector(vectorData) {
+        const { real, imag, magnitude, coherence, path } = vectorData;
+        
+        // Update statistics displays
+        document.getElementById('magnitudeOutput').textContent = magnitude.toFixed(6);
+        document.getElementById('coherenceOutput').textContent = (coherence * 100).toFixed(2) + '%';
+        
+        document.getElementById('primeCount').textContent = vectorData.primeCount;
+        document.getElementById('pathLength').textContent = vectorData.pathLength.toFixed(4);
+        document.getElementById('efficiencyRatio').textContent = (magnitude / vectorData.pathLength).toFixed(4);
+        document.getElementById('meanContrib').textContent = (magnitude / vectorData.primeCount).toFixed(6);
+        document.getElementById('stdReal').textContent = vectorData.stdReal.toFixed(6);
+        document.getElementById('stdImag').textContent = vectorData.stdImag.toFixed(6);
+        document.getElementById('maxExcursion').textContent = vectorData.maxExcursion.toFixed(4);
+        document.getElementById('windingNumber').textContent = vectorData.windingNumber.toFixed(3);
+        document.getElementById('directionalBias').textContent = (vectorData.directionalBias * 100).toFixed(1) + '%';
+        document.getElementById('cancellationIndex').textContent = (vectorData.cancellationIndex * 100).toFixed(2) + '%';
+        document.getElementById('angularMomentum').textContent = vectorData.angularMomentum.toFixed(6);
+        document.getElementById('tortuosity').textContent = (vectorData.pathLength / magnitude).toFixed(2);
+        
+        document.getElementById('largestPrime').textContent = vectorData.largestPrime;
+        document.getElementById('primeDensity').textContent = vectorData.primeDensity.toFixed(4);
+        document.getElementById('liEstimate').textContent = vectorData.Li_X.toFixed(2);
+        document.getElementById('estimateError').textContent = (vectorData.primeCount - vectorData.Li_X).toFixed(2);
+        document.getElementById('avgGap').textContent = vectorData.avgGap.toFixed(2);
+        document.getElementById('maxGap').textContent = vectorData.maxGap;
+        
+        document.getElementById('totient').textContent = vectorData.totient;
+        document.getElementById('primitiveRoots').textContent = vectorData.primitiveRootCount;
+        document.getElementById('residueCoverage').textContent = vectorData.residueCoverage + ' / ' + vectorData.M;
+        document.getElementById('quadResidues').textContent = Math.ceil(vectorData.totient / 2);
+        document.getElementById('periodicityScore').textContent = vectorData.periodicityScore.toFixed(4);
+        document.getElementById('residueEntropy').textContent = vectorData.residueEntropy.toFixed(3);
+        
+        // Canvas drawing
+        const W = canvas.width;
+        const H = canvas.height;
+        const centerX = W / 2;
+        const centerY = H / 2;
+        ctx.clearRect(0, 0, W, H);
+
+        // Determine scale
+        let maxDim = 0;
+        for (const point of path) {
+            maxDim = Math.max(maxDim, Math.abs(point.real), Math.abs(point.imag));
+        }
+        const scaleFactor = Math.min(W, H) / (2.4 * Math.max(maxDim, 0.5));
+
+        // Draw grid if enabled
+        if (document.getElementById('showGrid').checked) {
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.lineWidth = 1;
+            
+            // Vertical lines
+            for (let i = -10; i <= 10; i++) {
+                const x = centerX + i * scaleFactor * 0.5;
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, H);
+                ctx.stroke();
+            }
+            
+            // Horizontal lines
+            for (let i = -10; i <= 10; i++) {
+                const y = centerY + i * scaleFactor * 0.5;
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(W, y);
+                ctx.stroke();
+            }
+        }
+
+        // Draw unit circle and axes
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+        ctx.lineWidth = 2;
+        ctx.arc(centerX, centerY, scaleFactor, 0, 2 * Math.PI);
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.lineWidth = 2;
+        ctx.moveTo(0, centerY);
+        ctx.lineTo(W, centerY);
+        ctx.moveTo(centerX, 0);
+        ctx.lineTo(centerX, H);
+        ctx.stroke();
+        
+        // Axis labels
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.font = '14px Segoe UI';
+        ctx.fillText('Re', W - 30, centerY - 10);
+        ctx.fillText('Im', centerX + 10, 20);
+        
+        // Draw the path if enabled
+        if (document.getElementById('showPath').checked) {
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.lineWidth = 1.5;
+            ctx.moveTo(centerX, centerY);
+            for (let i = 1; i < path.length; i++) {
+                ctx.lineTo(centerX + path[i].real * scaleFactor, centerY - path[i].imag * scaleFactor);
+            }
+            ctx.stroke();
+        }
+
+        // Draw the final vector P_t(M)
+        ctx.beginPath();
+        ctx.strokeStyle = '#FFD700';
+        ctx.lineWidth = 4;
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(centerX + real * scaleFactor, centerY - imag * scaleFactor);
+        ctx.stroke();
+        
+        // Draw arrowhead
+        const angle = Math.atan2(-imag, real);
+        const arrowLength = 15;
+        const arrowAngle = Math.PI / 6;
+        const endX = centerX + real * scaleFactor;
+        const endY = centerY - imag * scaleFactor;
+        
+        ctx.beginPath();
+        ctx.fillStyle = '#FFD700';
+        ctx.moveTo(endX, endY);
+        ctx.lineTo(
+            endX - arrowLength * Math.cos(angle - arrowAngle),
+            endY + arrowLength * Math.sin(angle - arrowAngle)
+        );
+        ctx.lineTo(
+            endX - arrowLength * Math.cos(angle + arrowAngle),
+            endY + arrowLength * Math.sin(angle + arrowAngle)
+        );
+        ctx.closePath();
+        ctx.fill();
+        
+        // Draw the final point
+        ctx.beginPath();
+        ctx.fillStyle = '#FFD700';
+        ctx.arc(endX, endY, 6, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Draw title if enabled
+        const customTitle = document.getElementById('canvasTitle').value;
+        if (customTitle) {
+            ctx.fillStyle = 'rgba(78, 205, 196, 1)';
+            ctx.font = 'bold 18px Segoe UI';
+            ctx.textAlign = 'center';
+            ctx.fillText(customTitle, W / 2, 25);
+        }
+
+        // Update status
+        const phaseAngle = Math.atan2(imag, real) * 180 / Math.PI;
+        document.getElementById('vectorStatus').textContent = 
+            `Vector End: (${real.toFixed(4)}, ${imag.toFixed(4)}) | Phase: ${phaseAngle.toFixed(2)}° | Magnitude: ${magnitude.toFixed(6)}`;
+    }
+
+    // Update visualization
+    function updateVisualization() {
+        const M = parseInt(document.getElementById('modulusSlider').value);
+        const t = parseFloat(document.getElementById('heightTSlider').value);
+        const X = parseInt(document.getElementById('cutoffXSlider').value);
+
+        document.getElementById('modulusValue').textContent = M;
+        document.getElementById('heightTValue').textContent = t.toFixed(4);
+        document.getElementById('cutoffXValue').textContent = X;
+
+        currentVectorData = calculatePrimePhaseVector(M, t, X);
+        drawVector(currentVectorData);
+    }
+
+    // Export functions
+    function exportCanvasPNG() {
+        const link = document.createElement('a');
+        link.download = `prime_phase_vector_M${currentVectorData.M}_t${currentVectorData.t.toFixed(4)}_X${currentVectorData.X}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    }
+
+    function exportCanvasSVG() {
+        // Create SVG representation
+        const W = canvas.width;
+        const H = canvas.height;
+        const { real, imag, path } = currentVectorData;
+        
+        const centerX = W / 2;
+        const centerY = H / 2;
+        
+        let maxDim = 0;
+        for (const point of path) {
+            maxDim = Math.max(maxDim, Math.abs(point.real), Math.abs(point.imag));
+        }
+        const scaleFactor = Math.min(W, H) / (2.4 * Math.max(maxDim, 0.5));
+        
+        let svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">`;
+        svg += `<rect width="${W}" height="${H}" fill="#000000"/>`;
+        
+        // Unit circle
+        svg += `<circle cx="${centerX}" cy="${centerY}" r="${scaleFactor}" stroke="rgba(255,255,255,0.25)" stroke-width="2" fill="none"/>`;
+        
+        // Axes
+        svg += `<line x1="0" y1="${centerY}" x2="${W}" y2="${centerY}" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>`;
+        svg += `<line x1="${centerX}" y1="0" x2="${centerX}" y2="${H}" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>`;
+        
+        // Path
+        if (document.getElementById('showPath').checked) {
+            svg += `<polyline points="${centerX},${centerY}`;
+            for (let i = 1; i < path.length; i++) {
+                svg += ` ${centerX + path[i].real * scaleFactor},${centerY - path[i].imag * scaleFactor}`;
+            }
+            svg += `" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="none"/>`;
+        }
+        
+        // Final vector
+        const endX = centerX + real * scaleFactor;
+        const endY = centerY - imag * scaleFactor;
+        svg += `<line x1="${centerX}" y1="${centerY}" x2="${endX}" y2="${endY}" stroke="#FFD700" stroke-width="4"/>`;
+        svg += `<circle cx="${endX}" cy="${endY}" r="6" fill="#FFD700"/>`;
+        
+        svg += '</svg>';
+        
+        const blob = new Blob([svg], { type: 'image/svg+xml' });
+        const link = document.createElement('a');
+        link.download = `prime_phase_vector_M${currentVectorData.M}_t${currentVectorData.t.toFixed(4)}_X${currentVectorData.X}.svg`;
+        link.href = URL.createObjectURL(blob);
+        link.click();
+    }
+
+    function exportDataCSV() {
+        if (!currentVectorData) return;
+        
+        let csv = 'Prime-Phase Vector Data Export\n';
+        csv += `Parameters: M=${currentVectorData.M}, t=${currentVectorData.t}, X=${currentVectorData.X}\n\n`;
+        
+        csv += 'Summary Statistics\n';
+        csv += 'Metric,Value\n';
+        csv += `Vector Magnitude,${currentVectorData.magnitude}\n`;
+        csv += `Coherence Score,${currentVectorData.coherence}\n`;
+        csv += `Prime Count,${currentVectorData.primeCount}\n`;
+        csv += `Path Length,${currentVectorData.pathLength}\n`;
+        csv += `Cancellation Index,${currentVectorData.cancellationIndex}\n`;
+        csv += `Max Excursion,${currentVectorData.maxExcursion}\n`;
+        csv += `Winding Number,${currentVectorData.windingNumber}\n`;
+        csv += `Angular Momentum,${currentVectorData.angularMomentum}\n`;
+        csv += `Std Dev (Real),${currentVectorData.stdReal}\n`;
+        csv += `Std Dev (Imag),${currentVectorData.stdImag}\n`;
+        csv += `Largest Prime,${currentVectorData.largestPrime}\n`;
+        csv += `Prime Density,${currentVectorData.primeDensity}\n`;
+        csv += `Li(X) Estimate,${currentVectorData.Li_X}\n`;
+        csv += `Avg Prime Gap,${currentVectorData.avgGap}\n`;
+        csv += `Max Prime Gap,${currentVectorData.maxGap}\n`;
+        csv += `Euler Totient,${currentVectorData.totient}\n`;
+        csv += `Primitive Roots,${currentVectorData.primitiveRootCount}\n`;
+        csv += `Residue Coverage,${currentVectorData.residueCoverage}\n`;
+        csv += `Residue Entropy,${currentVectorData.residueEntropy}\n`;
+        csv += `Periodicity Score,${currentVectorData.periodicityScore}\n\n`;
+        
+        csv += 'Prime List\n';
+        csv += 'Index,Prime\n';
+        currentVectorData.primes.forEach((p, i) => {
+            csv += `${i + 1},${p}\n`;
+        });
+        
+        csv += '\nVector Path Data\n';
+        csv += 'Step,Real,Imaginary,Distance from Origin\n';
+        currentVectorData.path.forEach((point, i) => {
+            const dist = Math.sqrt(point.real * point.real + point.imag * point.imag);
+            csv += `${i},${point.real},${point.imag},${dist}\n`;
+        });
+        
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const link = document.createElement('a');
+        link.download = `prime_phase_data_M${currentVectorData.M}_t${currentVectorData.t.toFixed(4)}_X${currentVectorData.X}.csv`;
+        link.href = URL.createObjectURL(blob);
+        link.click();
+    }
+
+    // Event listeners
+    document.getElementById('modulusSlider').addEventListener('input', updateVisualization);
+    document.getElementById('heightTSlider').addEventListener('input', updateVisualization);
+    document.getElementById('cutoffXSlider').addEventListener('input', updateVisualization);
+    document.getElementById('showLegend').addEventListener('change', updateVisualization);
+    document.getElementById('showGrid').addEventListener('change', updateVisualization);
+    document.getElementById('showPath').addEventListener('change', updateVisualization);
+    document.getElementById('canvasTitle').addEventListener('input', updateVisualization);
+
+    // Initialize
+    function init() {
+        updateVisualization();
+    }
+
+    init();
+</script>
+
+</body>
+</html>
