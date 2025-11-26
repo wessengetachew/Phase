@@ -3,20 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prime-Phase Vector Visualization Tool</title>
+    <title>Prime-Phase Vector Visualization Tool - Mathematical Research Explorer</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0a0a0f; color: #e0e0e0; min-height: 100vh; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0a0a0f; color: #e0e0e0; }
         
-        .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 24px 40px; border-bottom: 1px solid #2a2a4a; }
-        .header h1 { font-size: 1.8rem; color: #ffd700; margin-bottom: 4px; }
-        .header .subtitle { color: #888; font-size: 0.95rem; }
-        .header .author { color: #aaa; font-size: 0.85rem; margin-top: 8px; }
+        .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 32px 40px; border-bottom: 1px solid #2a2a4a; }
+        .header h1 { font-size: 2rem; color: #ffd700; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .header .subtitle { color: #aaa; font-size: 1rem; margin-bottom: 12px; }
+        .header .author { color: #888; font-size: 0.9rem; margin-top: 4px; }
         
-        .main-container { display: grid; grid-template-columns: 340px 1fr 320px; gap: 20px; padding: 20px; min-height: calc(100vh - 100px); }
+        .documentation { max-width: 1400px; margin: 0 auto; padding: 32px 40px; }
+        .doc-section { background: #12121a; border-radius: 8px; border: 1px solid #2a2a4a; padding: 24px; margin-bottom: 24px; }
+        .doc-section h2 { color: #ffd700; font-size: 1.4rem; margin-bottom: 16px; border-bottom: 2px solid #2a2a4a; padding-bottom: 8px; }
+        .doc-section h3 { color: #ffd700; font-size: 1.1rem; margin: 20px 0 12px 0; }
+        .doc-section p { line-height: 1.7; margin-bottom: 12px; color: #ccc; }
+        .doc-section ul { margin-left: 24px; line-height: 1.8; color: #ccc; }
+        .doc-section li { margin-bottom: 8px; }
+        
+        .formula-block { background: #1a1a2a; padding: 16px; border-radius: 6px; font-family: 'Times New Roman', serif; font-size: 1.2rem; text-align: center; color: #ffd700; margin: 16px 0; border-left: 4px solid #ffd700; }
+        
+        .main-container { display: grid; grid-template-columns: 360px 1fr 360px; gap: 20px; padding: 20px; max-width: 2000px; margin: 0 auto; }
         
         .panel { background: #12121a; border-radius: 8px; border: 1px solid #2a2a4a; }
-        .panel-header { padding: 14px 16px; border-bottom: 1px solid #2a2a4a; font-weight: 600; color: #ffd700; font-size: 0.9rem; }
+        .panel-header { padding: 14px 16px; border-bottom: 1px solid #2a2a4a; font-weight: 600; color: #ffd700; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center; }
         .panel-content { padding: 16px; }
         
         .control-group { margin-bottom: 16px; }
@@ -26,28 +36,32 @@
         
         input[type="range"] { width: 100%; height: 6px; border-radius: 3px; background: #2a2a4a; outline: none; -webkit-appearance: none; }
         input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #ffd700; cursor: pointer; }
+        input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: #ffd700; cursor: pointer; border: none; }
         
-        input[type="number"], select { width: 100%; padding: 8px 10px; background: #1a1a2a; border: 1px solid #3a3a5a; border-radius: 4px; color: #e0e0e0; font-size: 0.85rem; }
-        input[type="number"]:focus, select:focus { outline: none; border-color: #ffd700; }
+        input[type="number"], select, input[type="text"] { width: 100%; padding: 8px 10px; background: #1a1a2a; border: 1px solid #3a3a5a; border-radius: 4px; color: #e0e0e0; font-size: 0.85rem; }
+        input[type="number"]:focus, select:focus, input[type="text"]:focus { outline: none; border-color: #ffd700; }
         
-        .btn { padding: 10px 16px; background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%); border: none; border-radius: 4px; color: #000; font-weight: 600; cursor: pointer; font-size: 0.85rem; transition: transform 0.1s; }
-        .btn:hover { transform: translateY(-1px); }
+        input[type="color"] { width: 100%; height: 36px; border: 1px solid #3a3a5a; border-radius: 4px; cursor: pointer; background: #1a1a2a; }
+        
+        .btn { padding: 10px 16px; background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%); border: none; border-radius: 4px; color: #000; font-weight: 600; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; width: 100%; }
+        .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3); }
         .btn:active { transform: translateY(0); }
         .btn-secondary { background: #2a2a4a; color: #e0e0e0; }
-        .btn-secondary:hover { background: #3a3a5a; }
+        .btn-secondary:hover { background: #3a3a5a; box-shadow: none; }
         
-        .canvas-container { position: relative; }
-        #mainCanvas { width: 100%; background: #000; border-radius: 8px; display: block; }
+        .canvas-container { position: relative; background: #000; border-radius: 8px; overflow: hidden; }
+        .canvas-wrapper { position: relative; overflow: hidden; }
+        canvas { display: block; cursor: grab; }
+        canvas:active { cursor: grabbing; }
         
-        .phase-space-container { margin-top: 16px; }
-        #phaseCanvas { width: 100%; height: 200px; background: #000; border-radius: 6px; }
+        .canvas-overlay { position: absolute; top: 10px; right: 10px; display: flex; gap: 8px; z-index: 10; }
+        .overlay-btn { background: rgba(0, 0, 0, 0.7); border: 1px solid #3a3a5a; color: #ffd700; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; transition: all 0.2s; }
+        .overlay-btn:hover { background: rgba(255, 215, 0, 0.2); border-color: #ffd700; }
         
         .stats-grid { display: grid; gap: 10px; }
         .stat-item { background: #1a1a2a; padding: 10px 12px; border-radius: 4px; border-left: 3px solid #ffd700; }
         .stat-label { font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
         .stat-value { font-size: 1.1rem; color: #ffd700; font-family: monospace; margin-top: 2px; }
-        
-        .section-divider { height: 1px; background: #2a2a4a; margin: 16px 0; }
         
         .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; }
         .toggle-row label { font-size: 0.85rem; color: #ccc; }
@@ -62,31 +76,108 @@
         .zero-btn { display: block; width: 100%; text-align: left; padding: 6px 10px; background: transparent; border: none; color: #aaa; font-size: 0.8rem; cursor: pointer; border-radius: 4px; font-family: monospace; }
         .zero-btn:hover { background: #2a2a4a; color: #ffd700; }
         
-        .export-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .export-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         
-        .color-input { display: flex; gap: 8px; align-items: center; }
-        .color-input input[type="color"] { width: 32px; height: 32px; border: none; border-radius: 4px; cursor: pointer; background: transparent; }
+        .color-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .color-item label { display: block; font-size: 0.75rem; color: #888; margin-bottom: 4px; }
         
-        .formula { background: #1a1a2a; padding: 12px; border-radius: 4px; font-family: 'Times New Roman', serif; font-size: 1.1rem; text-align: center; color: #ffd700; margin: 12px 0; }
+        .section-divider { height: 1px; background: #2a2a4a; margin: 16px 0; }
         
-        .history-chart { width: 100%; height: 120px; background: #0a0a10; border-radius: 4px; margin-top: 8px; }
+        .legend-box { position: absolute; background: rgba(0, 0, 0, 0.85); border: 1px solid #3a3a5a; border-radius: 6px; padding: 12px; font-size: 0.75rem; color: #e0e0e0; font-family: monospace; min-width: 200px; pointer-events: none; }
+        .legend-title { color: #ffd700; font-weight: 600; margin-bottom: 8px; border-bottom: 1px solid #3a3a5a; padding-bottom: 4px; }
+        .legend-item { margin: 4px 0; display: flex; justify-content: space-between; }
+        .legend-label { color: #aaa; }
+        .legend-value { color: #ffd700; margin-left: 12px; }
         
-        @media (max-width: 1200px) {
+        @media (max-width: 1400px) {
             .main-container { grid-template-columns: 1fr; }
+            .documentation { padding: 24px 20px; }
         }
+        
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #1a1a2a; }
+        ::-webkit-scrollbar-thumb { background: #3a3a5a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4a4a6a; }
     </style>
 </head>
 <body>
     <header class="header">
         <h1>Prime-Phase Vector Visualization Tool</h1>
-        <div class="subtitle">Mathematical Research Explorer: Riemann Hypothesis and Modular Arithmetic</div>
+        <div class="subtitle">Mathematical Research Explorer: Riemann Hypothesis and Modular Arithmetic Relationships</div>
         <div class="author">by Wessen Getachew | @7dview</div>
     </header>
+    
+    <div class="documentation">
+        <div class="doc-section">
+            <h2>Overview</h2>
+            <p>This visualization tool explores the deep connections between modular arithmetic structures and the Riemann zeta function through complex vector summation. By representing prime numbers as vectors in the complex plane with phases determined by both modular reduction and critical line dynamics, we can observe emergent patterns that may illuminate the distribution of Riemann zeros.</p>
+        </div>
+        
+        <div class="doc-section">
+            <h2>Mathematical Framework</h2>
+            <p>The core mathematical object under investigation is the prime-phase vector function:</p>
+            <div class="formula-block">P<sub>t</sub>(M) = Σ<sub>p≤X</sub> [e<sup>2πiγp/M</sup> / p<sup>β</sup>] · e<sup>-iαt·ln(p)</sup></div>
+            
+            <h3>Parameter Definitions</h3>
+            <ul>
+                <li><strong>M (Modulus Ring):</strong> The modular arithmetic base defining the residue class structure. This parameter controls the periodic spacing of phases in the complex plane.</li>
+                <li><strong>t (Critical Line Height):</strong> The imaginary component of the Riemann zeta function argument s = 1/2 + it. When t corresponds to a Riemann zero, special cancellation patterns emerge.</li>
+                <li><strong>X (Prime Cutoff):</strong> The upper bound for prime summation. Larger values provide more complete vector sums but require more computational resources.</li>
+                <li><strong>α (Phase Multiplier):</strong> Scaling factor for the critical line phase component. Standard value is 1, but variations reveal phase sensitivity.</li>
+                <li><strong>β (Magnitude Exponent):</strong> Power law exponent controlling magnitude decay. The classical value β = 1/2 corresponds to the critical line of ζ(s).</li>
+                <li><strong>γ (Modular Weight):</strong> Coefficient controlling the influence of modular phase structure relative to critical line dynamics.</li>
+            </ul>
+            
+            <h3>Vector Construction</h3>
+            <p>For each prime p ≤ X, we construct a complex vector with two phase components:</p>
+            <ul>
+                <li><strong>Modular Phase:</strong> θ<sub>mod</sub> = 2πγp/M, creating a discrete rotational structure based on residue classes.</li>
+                <li><strong>Critical Phase:</strong> θ<sub>crit</sub> = -αt·ln(p), encoding the logarithmic growth structure tied to the Riemann zeta function.</li>
+                <li><strong>Magnitude:</strong> |v<sub>p</sub>| = 1/p<sup>β</sup>, implementing a power law decay matching the analytic structure of L-functions.</li>
+            </ul>
+            
+            <h3>Statistical Metrics</h3>
+            <p>The tool computes real-time diagnostic statistics to quantify vector behavior:</p>
+            <ul>
+                <li><strong>Total Magnitude |P<sub>t</sub>|:</strong> The norm of the final cumulative vector, measuring net constructive interference.</li>
+                <li><strong>Coherence Score:</strong> C<sub>t</sub> = 1 - (|P<sub>t</sub>| / Σ|v<sub>p</sub>|), quantifying destructive interference. Values near 1 indicate strong cancellation.</li>
+                <li><strong>Path Length:</strong> Σ|v<sub>p</sub>|, the total distance traversed by the cumulative vector tip through the complex plane.</li>
+                <li><strong>Efficiency Ratio:</strong> |P<sub>t</sub>| / Σ|v<sub>p</sub>|, the ratio of direct distance to total path length. Low values indicate circuitous paths with cancellation.</li>
+                <li><strong>Maximum Excursion:</strong> The furthest distance the cumulative vector reaches from the origin during summation.</li>
+                <li><strong>Winding Number:</strong> The total angular rotation of the cumulative vector divided by 2π. Non-integer values reveal complex phase dynamics.</li>
+                <li><strong>Cancellation Index:</strong> 1 - (|P<sub>t</sub>| / Σ|v<sub>p</sub>|), an alternative measure of interference strength.</li>
+            </ul>
+        </div>
+        
+        <div class="doc-section">
+            <h2>Research Applications</h2>
+            <p>This tool enables investigation of several key mathematical questions:</p>
+            <ul>
+                <li><strong>Riemann Hypothesis Connection:</strong> By setting t to known Riemann zeros and exploring parameter space, we can identify modular structures that exhibit enhanced cancellation, potentially revealing algebraic or geometric properties of the zeros.</li>
+                <li><strong>Prime Distribution Patterns:</strong> The cumulative vector path visualizes how prime residue patterns interact with logarithmic phase spacing, offering geometric insight into number-theoretic phenomena.</li>
+                <li><strong>Modular-Analytic Correspondence:</strong> The interplay between discrete modular structure (M, γ) and continuous analytic structure (t, α, β) may illuminate connections between algebraic number theory and complex analysis.</li>
+                <li><strong>Phase Transition Detection:</strong> Monitoring statistics like coherence and winding number as parameters vary can reveal critical thresholds where qualitative behavior changes.</li>
+            </ul>
+        </div>
+        
+        <div class="doc-section">
+            <h2>Interactive Features</h2>
+            <ul>
+                <li><strong>Real-Time Visualization:</strong> All three canvases (main vector space, phase space, magnitude history) update dynamically as parameters change.</li>
+                <li><strong>Riemann Zero Presets:</strong> One-click navigation to the first 30 non-trivial Riemann zeros for immediate investigation of zero-correlated behavior.</li>
+                <li><strong>Animation Mode:</strong> Automated scanning through t-parameter space with adjustable speed, enabling observation of continuous transitions.</li>
+                <li><strong>Adaptive Legends:</strong> Each canvas includes a dynamic legend displaying current parameters and key statistics without visual overlap.</li>
+                <li><strong>Zoom and Pan:</strong> Mouse wheel zoom and click-drag panning for detailed examination of vector structures.</li>
+                <li><strong>Color Customization:</strong> Full control over vector path, grid, result vector, and background colors for optimal visual clarity and presentation.</li>
+                <li><strong>High-Resolution Export:</strong> PNG export at 4K resolution (3840×2160) for publication-quality figures, plus SVG for vector graphics and CSV for numerical data.</li>
+            </ul>
+        </div>
+    </div>
     
     <div class="main-container">
         <div class="left-panel">
             <div class="panel">
-                <div class="panel-header">Vector Parameters</div>
+                <div class="panel-header">Primary Parameters</div>
                 <div class="panel-content">
                     <div class="control-group">
                         <div class="control-label"><span>Modulus Ring M</span><span class="control-value" id="mValue">37</span></div>
@@ -104,18 +195,18 @@
             </div>
             
             <div class="panel" style="margin-top: 16px;">
-                <div class="panel-header">Core Mathematical Parameters</div>
+                <div class="panel-header">Mathematical Parameters</div>
                 <div class="panel-content">
                     <div class="control-group">
-                        <div class="control-label"><span>Phase Multiplier alpha</span><span class="control-value" id="alphaValue">1.0000</span></div>
+                        <div class="control-label"><span>Phase Multiplier α</span><span class="control-value" id="alphaValue">1.0000</span></div>
                         <input type="range" id="alpha" min="0" max="10" step="0.0001" value="1">
                     </div>
                     <div class="control-group">
-                        <div class="control-label"><span>Magnitude Exponent beta</span><span class="control-value" id="betaValue">0.5000</span></div>
+                        <div class="control-label"><span>Magnitude Exponent β</span><span class="control-value" id="betaValue">0.5000</span></div>
                         <input type="range" id="beta" min="0" max="2" step="0.0001" value="0.5">
                     </div>
                     <div class="control-group">
-                        <div class="control-label"><span>Modular Weight gamma</span><span class="control-value" id="gammaValue">1.0000</span></div>
+                        <div class="control-label"><span>Modular Weight γ</span><span class="control-value" id="gammaValue">1.0000</span></div>
                         <input type="range" id="gamma" min="0" max="10" step="0.0001" value="1">
                     </div>
                 </div>
@@ -129,12 +220,34 @@
             </div>
             
             <div class="panel" style="margin-top: 16px;">
-                <div class="panel-header">Animation</div>
+                <div class="panel-header">Color Customization</div>
                 <div class="panel-content">
-                    <div style="display: flex; gap: 8px; margin-bottom: 12px;">
-                        <button class="btn" id="animateBtn" onclick="toggleAnimation()">Animate t</button>
-                        <button class="btn btn-secondary" onclick="resetAnimation()">Reset</button>
+                    <div class="color-grid">
+                        <div class="color-item">
+                            <label>Path Color</label>
+                            <input type="color" id="pathColor" value="#64c8ff">
+                        </div>
+                        <div class="color-item">
+                            <label>Result Vector</label>
+                            <input type="color" id="resultColor" value="#ffd700">
+                        </div>
+                        <div class="color-item">
+                            <label>Grid Lines</label>
+                            <input type="color" id="gridColor" value="#ffffff">
+                        </div>
+                        <div class="color-item">
+                            <label>Origin Point</label>
+                            <input type="color" id="originColor" value="#00ffff">
+                        </div>
                     </div>
+                </div>
+            </div>
+            
+            <div class="panel" style="margin-top: 16px;">
+                <div class="panel-header">Animation Controls</div>
+                <div class="panel-content">
+                    <button class="btn" id="animateBtn" onclick="toggleAnimation()" style="margin-bottom: 8px;">Animate t Parameter</button>
+                    <button class="btn btn-secondary" onclick="resetAnimation()" style="margin-bottom: 12px;">Reset to First Zero</button>
                     <div class="control-group">
                         <div class="control-label"><span>Animation Speed</span><span class="control-value" id="speedValue">1.0</span></div>
                         <input type="range" id="animSpeed" min="0.1" max="5" step="0.1" value="1">
@@ -145,56 +258,79 @@
         
         <div class="center-panel">
             <div class="panel canvas-container">
-                <canvas id="mainCanvas" width="900" height="600"></canvas>
+                <div class="panel-header">
+                    <span>Main Vector Space Visualization</span>
+                    <div class="canvas-overlay">
+                        <button class="overlay-btn" onclick="resetZoom('main')">Reset Zoom</button>
+                        <button class="overlay-btn" onclick="exportCanvas('main')">Export 4K</button>
+                    </div>
+                </div>
+                <div class="canvas-wrapper" id="mainWrapper">
+                    <canvas id="mainCanvas" width="1200" height="800"></canvas>
+                </div>
             </div>
-            <div class="panel phase-space-container">
-                <div class="panel-header">Real-Time Phase Space</div>
-                <canvas id="phaseCanvas" width="900" height="200"></canvas>
-            </div>
+            
             <div class="panel" style="margin-top: 16px;">
-                <div class="panel-header">Magnitude History</div>
-                <div class="panel-content">
-                    <div class="toggle-row">
-                        <label>Enable Magnitude History</label>
-                        <label class="toggle"><input type="checkbox" id="enableHistory" checked><span class="toggle-slider"></span></label>
+                <div class="panel-header">
+                    <span>Phase Space Trajectory</span>
+                    <div class="canvas-overlay">
+                        <button class="overlay-btn" onclick="resetZoom('phase')">Reset Zoom</button>
+                        <button class="overlay-btn" onclick="exportCanvas('phase')">Export 4K</button>
                     </div>
-                    <canvas id="historyCanvas" class="history-chart" width="900" height="120"></canvas>
-                    <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.75rem; color: #888;">
-                        <span id="historyStats">Data Points: 0</span>
-                        <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.75rem;" onclick="clearHistory()">Clear</button>
+                </div>
+                <div class="canvas-wrapper" id="phaseWrapper">
+                    <canvas id="phaseCanvas" width="1200" height="300"></canvas>
+                </div>
+            </div>
+            
+            <div class="panel" style="margin-top: 16px;">
+                <div class="panel-header">
+                    <span>Magnitude Evolution History</span>
+                    <div class="canvas-overlay">
+                        <button class="overlay-btn" onclick="clearHistory()">Clear Data</button>
+                        <button class="overlay-btn" onclick="exportCanvas('history')">Export 4K</button>
                     </div>
+                </div>
+                <div class="toggle-row" style="padding: 8px 16px;">
+                    <label>Enable History Tracking</label>
+                    <label class="toggle"><input type="checkbox" id="enableHistory" checked><span class="toggle-slider"></span></label>
+                </div>
+                <div class="canvas-wrapper" id="historyWrapper">
+                    <canvas id="historyCanvas" width="1200" height="200"></canvas>
+                </div>
+                <div style="padding: 8px 16px; font-size: 0.75rem; color: #888;">
+                    <span id="historyStats">Data Points: 0</span>
                 </div>
             </div>
         </div>
         
         <div class="right-panel">
             <div class="panel">
-                <div class="panel-header">Diagnostic Scores</div>
+                <div class="panel-header">Primary Diagnostics</div>
                 <div class="panel-content">
-                    <div class="formula">P_t(M) = Sum[e^(2pi*i*gamma*p/M) / p^beta * e^(-i*alpha*t*ln(p))]</div>
                     <div class="stats-grid">
                         <div class="stat-item">
-                            <div class="stat-label">Total Vector Magnitude |P_t|</div>
-                            <div class="stat-value" id="statMagnitude">0.0000</div>
+                            <div class="stat-label">Vector Magnitude |P<sub>t</sub>|</div>
+                            <div class="stat-value" id="statMagnitude">0.000000</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-label">Coherence Score C_t</div>
-                            <div class="stat-value" id="statCoherence">0.0000</div>
+                            <div class="stat-label">Coherence Score C<sub>t</sub></div>
+                            <div class="stat-value" id="statCoherence">0.000000</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-label">Real Component</div>
-                            <div class="stat-value" id="statReal">0.0000</div>
+                            <div class="stat-label">Real Component ℜ(P<sub>t</sub>)</div>
+                            <div class="stat-value" id="statReal">0.000000</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-label">Imaginary Component</div>
-                            <div class="stat-value" id="statImag">0.0000</div>
+                            <div class="stat-label">Imaginary Component ℑ(P<sub>t</sub>)</div>
+                            <div class="stat-value" id="statImag">0.000000</div>
                         </div>
                     </div>
                 </div>
             </div>
             
             <div class="panel" style="margin-top: 16px;">
-                <div class="panel-header">Vector Dynamics</div>
+                <div class="panel-header">Vector Path Metrics</div>
                 <div class="panel-content">
                     <div class="stats-grid">
                         <div class="stat-item">
@@ -202,15 +338,15 @@
                             <div class="stat-value" id="statPrimeCount">0</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-label">Path Length</div>
+                            <div class="stat-label">Total Path Length</div>
                             <div class="stat-value" id="statPathLength">0.0000</div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-label">Efficiency Ratio</div>
-                            <div class="stat-value" id="statEfficiency">0.0000</div>
+                            <div class="stat-value" id="statEfficiency">0.000000</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-label">Max Excursion</div>
+                            <div class="stat-label">Maximum Excursion</div>
                             <div class="stat-value" id="statMaxExcursion">0.0000</div>
                         </div>
                         <div class="stat-item">
@@ -219,43 +355,47 @@
                         </div>
                         <div class="stat-item">
                             <div class="stat-label">Cancellation Index</div>
-                            <div class="stat-value" id="statCancellation">0.0000</div>
+                            <div class="stat-value" id="statCancellation">0.000000</div>
                         </div>
                     </div>
                 </div>
             </div>
             
             <div class="panel" style="margin-top: 16px;">
-                <div class="panel-header">Display Options</div>
+                <div class="panel-header">Display Configuration</div>
                 <div class="panel-content">
                     <div class="toggle-row">
-                        <label>Show Path</label>
+                        <label>Show Vector Path</label>
                         <label class="toggle"><input type="checkbox" id="showPath" checked><span class="toggle-slider"></span></label>
                     </div>
                     <div class="toggle-row">
-                        <label>Show Grid</label>
+                        <label>Show Grid Lines</label>
                         <label class="toggle"><input type="checkbox" id="showGrid" checked><span class="toggle-slider"></span></label>
                     </div>
                     <div class="toggle-row">
-                        <label>Show Legend</label>
+                        <label>Show Adaptive Legend</label>
                         <label class="toggle"><input type="checkbox" id="showLegend" checked><span class="toggle-slider"></span></label>
                     </div>
                     <div class="section-divider"></div>
                     <div class="control-group">
-                        <div class="control-label"><span>Path Opacity</span><span class="control-value" id="opacityValue">15%</span></div>
-                        <input type="range" id="pathOpacity" min="5" max="100" value="15">
+                        <div class="control-label"><span>Path Opacity</span><span class="control-value" id="opacityValue">30%</span></div>
+                        <input type="range" id="pathOpacity" min="5" max="100" value="30">
+                    </div>
+                    <div class="control-group">
+                        <div class="control-label"><span>Grid Opacity</span><span class="control-value" id="gridOpacityValue">20%</span></div>
+                        <input type="range" id="gridOpacity" min="5" max="100" value="20">
                     </div>
                 </div>
             </div>
             
             <div class="panel" style="margin-top: 16px;">
-                <div class="panel-header">Export</div>
+                <div class="panel-header">Data Export</div>
                 <div class="panel-content">
-                    <div class="export-btns">
-                        <button class="btn btn-secondary" onclick="exportPNG()">PNG</button>
-                        <button class="btn btn-secondary" onclick="exportSVG()">SVG</button>
-                        <button class="btn btn-secondary" onclick="exportCSV()">Data CSV</button>
-                        <button class="btn btn-secondary" onclick="exportHistory()">History</button>
+                    <div class="export-grid">
+                        <button class="btn btn-secondary" onclick="exportAllPNG()">All PNG</button>
+                        <button class="btn btn-secondary" onclick="exportAllSVG()">All SVG</button>
+                        <button class="btn btn-secondary" onclick="exportCSV()">Vector CSV</button>
+                        <button class="btn btn-secondary" onclick="exportHistory()">History CSV</button>
                     </div>
                 </div>
             </div>
@@ -270,6 +410,13 @@
         let historyData = [];
         let isAnimating = false;
         let animationId = null;
+        
+        // Zoom and pan state for each canvas
+        const canvasStates = {
+            main: { zoom: 1, offsetX: 0, offsetY: 0, isDragging: false, lastX: 0, lastY: 0 },
+            phase: { zoom: 1, offsetX: 0, offsetY: 0, isDragging: false, lastX: 0, lastY: 0 },
+            history: { zoom: 1, offsetX: 0, offsetY: 0, isDragging: false, lastX: 0, lastY: 0 }
+        };
         
         function sievePrimes(max) {
             const sieve = new Array(max + 1).fill(true);
@@ -369,38 +516,121 @@
             renderHistory();
         }
         
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : { r: 255, g: 255, b: 255 };
+        }
+        
+        function getLegendPosition(canvas, width, height) {
+            const margin = 15;
+            const positions = [
+                { x: margin, y: margin, align: 'left' },
+                { x: canvas.width - width - margin, y: margin, align: 'right' },
+                { x: margin, y: canvas.height - height - margin, align: 'left' },
+                { x: canvas.width - width - margin, y: canvas.height - height - margin, align: 'right' }
+            ];
+            return positions[0];
+        }
+        
+        function drawAdaptiveLegend(ctx, canvas, title, items) {
+            if (!document.getElementById('showLegend').checked) return;
+            
+            ctx.save();
+            ctx.font = '11px monospace';
+            
+            const lineHeight = 16;
+            const padding = 10;
+            const titleHeight = 18;
+            
+            let maxWidth = ctx.measureText(title).width;
+            items.forEach(item => {
+                const textWidth = ctx.measureText(item.label + ': ' + item.value).width;
+                maxWidth = Math.max(maxWidth, textWidth);
+            });
+            
+            const boxWidth = maxWidth + padding * 2;
+            const boxHeight = titleHeight + items.length * lineHeight + padding;
+            
+            const pos = getLegendPosition(canvas, boxWidth, boxHeight);
+            
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+            ctx.fillRect(pos.x, pos.y, boxWidth, boxHeight);
+            ctx.strokeStyle = '#3a3a5a';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(pos.x, pos.y, boxWidth, boxHeight);
+            
+            ctx.fillStyle = '#ffd700';
+            ctx.font = 'bold 11px monospace';
+            ctx.fillText(title, pos.x + padding, pos.y + padding + 11);
+            
+            ctx.strokeStyle = '#3a3a5a';
+            ctx.beginPath();
+            ctx.moveTo(pos.x + padding, pos.y + titleHeight - 2);
+            ctx.lineTo(pos.x + boxWidth - padding, pos.y + titleHeight - 2);
+            ctx.stroke();
+            
+            ctx.font = '10px monospace';
+            items.forEach((item, i) => {
+                const y = pos.y + titleHeight + (i + 1) * lineHeight;
+                ctx.fillStyle = '#aaa';
+                ctx.fillText(item.label + ':', pos.x + padding, y);
+                ctx.fillStyle = '#ffd700';
+                const labelWidth = ctx.measureText(item.label + ': ').width;
+                ctx.fillText(item.value, pos.x + padding + labelWidth, y);
+            });
+            
+            ctx.restore();
+        }
+        
         function render() {
             const canvas = document.getElementById('mainCanvas');
             const ctx = canvas.getContext('2d');
             const w = canvas.width, h = canvas.height;
             const cx = w / 2, cy = h / 2;
+            const state = canvasStates.main;
             
+            ctx.save();
             ctx.fillStyle = '#000';
             ctx.fillRect(0, 0, w, h);
             
-            if (pathData.length === 0) return;
+            ctx.translate(state.offsetX, state.offsetY);
+            ctx.scale(state.zoom, state.zoom);
+            
+            if (pathData.length === 0) {
+                ctx.restore();
+                return;
+            }
             
             const maxDist = Math.max(...pathData.map(p => Math.max(Math.abs(p.re), Math.abs(p.im))), 1);
-            const scale = Math.min(w, h) * 0.4 / maxDist;
+            const scale = Math.min(w, h) * 0.35 / maxDist;
+            
+            const gridColor = hexToRgb(document.getElementById('gridColor').value);
+            const gridOpacity = parseInt(document.getElementById('gridOpacity').value) / 100;
             
             if (document.getElementById('showGrid').checked) {
-                ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-                ctx.lineWidth = 1;
+                ctx.strokeStyle = `rgba(${gridColor.r}, ${gridColor.g}, ${gridColor.b}, ${gridOpacity * 0.5})`;
+                ctx.lineWidth = 1 / state.zoom;
                 for (let i = -10; i <= 10; i++) {
                     const x = cx + i * scale * maxDist / 5;
                     ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
                     const y = cy + i * scale * maxDist / 5;
                     ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
                 }
-                ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                ctx.strokeStyle = `rgba(${gridColor.r}, ${gridColor.g}, ${gridColor.b}, ${gridOpacity})`;
+                ctx.lineWidth = 1.5 / state.zoom;
                 ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(w, cy); ctx.stroke();
                 ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, h); ctx.stroke();
             }
             
             if (document.getElementById('showPath').checked) {
+                const pathColor = hexToRgb(document.getElementById('pathColor').value);
                 const opacity = parseInt(document.getElementById('pathOpacity').value) / 100;
-                ctx.strokeStyle = `rgba(100, 200, 255, ${opacity})`;
-                ctx.lineWidth = 1.5;
+                ctx.strokeStyle = `rgba(${pathColor.r}, ${pathColor.g}, ${pathColor.b}, ${opacity})`;
+                ctx.lineWidth = 2 / state.zoom;
                 ctx.beginPath();
                 ctx.moveTo(cx, cy);
                 pathData.forEach(p => {
@@ -409,50 +639,53 @@
                 ctx.stroke();
             }
             
+            const originColor = hexToRgb(document.getElementById('originColor').value);
             ctx.beginPath();
-            ctx.arc(cx, cy, 6, 0, 2 * Math.PI);
-            ctx.fillStyle = '#00ffff';
+            ctx.arc(cx, cy, 6 / state.zoom, 0, 2 * Math.PI);
+            ctx.fillStyle = `rgb(${originColor.r}, ${originColor.g}, ${originColor.b})`;
             ctx.fill();
             
             const last = pathData[pathData.length - 1];
             const endX = cx + last.re * scale;
             const endY = cy - last.im * scale;
             
-            ctx.strokeStyle = '#ffd700';
-            ctx.lineWidth = 3;
+            const resultColor = hexToRgb(document.getElementById('resultColor').value);
+            ctx.strokeStyle = `rgb(${resultColor.r}, ${resultColor.g}, ${resultColor.b})`;
+            ctx.lineWidth = 3 / state.zoom;
             ctx.beginPath();
             ctx.moveTo(cx, cy);
             ctx.lineTo(endX, endY);
             ctx.stroke();
             
-            const arrowSize = 12;
+            const arrowSize = 12 / state.zoom;
             const angle = Math.atan2(cy - endY, endX - cx);
             ctx.beginPath();
             ctx.moveTo(endX, endY);
             ctx.lineTo(endX - arrowSize * Math.cos(angle - 0.3), endY + arrowSize * Math.sin(angle - 0.3));
             ctx.lineTo(endX - arrowSize * Math.cos(angle + 0.3), endY + arrowSize * Math.sin(angle + 0.3));
             ctx.closePath();
-            ctx.fillStyle = '#ffd700';
+            ctx.fillStyle = `rgb(${resultColor.r}, ${resultColor.g}, ${resultColor.b})`;
             ctx.fill();
             
             ctx.beginPath();
-            ctx.arc(endX, endY, 8, 0, 2 * Math.PI);
-            ctx.fillStyle = '#ffd700';
+            ctx.arc(endX, endY, 8 / state.zoom, 0, 2 * Math.PI);
+            ctx.fillStyle = `rgb(${resultColor.r}, ${resultColor.g}, ${resultColor.b})`;
             ctx.fill();
             
-            if (document.getElementById('showLegend').checked) {
-                ctx.fillStyle = 'rgba(0,0,0,0.7)';
-                ctx.fillRect(10, 10, 180, 90);
-                ctx.strokeStyle = '#333';
-                ctx.strokeRect(10, 10, 180, 90);
-                
-                ctx.font = '12px monospace';
-                ctx.fillStyle = '#ffd700';
-                ctx.fillText(`M = ${document.getElementById('modulus').value}`, 20, 30);
-                ctx.fillText(`t = ${parseFloat(document.getElementById('criticalT').value).toFixed(4)}`, 20, 48);
-                ctx.fillText(`X = ${document.getElementById('primeCutoff').value}`, 20, 66);
-                ctx.fillText(`|P_t| = ${document.getElementById('statMagnitude').textContent}`, 20, 84);
-            }
+            ctx.restore();
+            
+            const M = document.getElementById('modulus').value;
+            const t = parseFloat(document.getElementById('criticalT').value).toFixed(4);
+            const X = document.getElementById('primeCutoff').value;
+            const primeCount = primes.length;
+            
+            drawAdaptiveLegend(ctx, canvas, 'Vector Space Parameters', [
+                { label: 'Modulus M', value: M },
+                { label: 'Height t', value: t },
+                { label: 'Cutoff X', value: X },
+                { label: 'Primes', value: primeCount },
+                { label: 'Magnitude', value: document.getElementById('statMagnitude').textContent }
+            ]);
         }
         
         function renderPhaseSpace() {
@@ -460,28 +693,40 @@
             const ctx = canvas.getContext('2d');
             const w = canvas.width, h = canvas.height;
             const cx = w / 2, cy = h / 2;
+            const state = canvasStates.phase;
             
+            ctx.save();
             ctx.fillStyle = '#000';
             ctx.fillRect(0, 0, w, h);
             
-            if (pathData.length === 0) return;
+            ctx.translate(state.offsetX, state.offsetY);
+            ctx.scale(state.zoom, state.zoom);
+            
+            if (pathData.length === 0) {
+                ctx.restore();
+                return;
+            }
             
             const maxDist = Math.max(...pathData.map(p => Math.sqrt(p.re * p.re + p.im * p.im)), 1);
-            const scale = Math.min(w, h) * 0.4 / maxDist;
+            const scale = Math.min(w, h) * 0.35 / maxDist;
             
-            ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-            ctx.lineWidth = 1;
+            const gridColor = hexToRgb(document.getElementById('gridColor').value);
+            const gridOpacity = parseInt(document.getElementById('gridOpacity').value) / 100;
+            
+            ctx.strokeStyle = `rgba(${gridColor.r}, ${gridColor.g}, ${gridColor.b}, ${gridOpacity * 0.5})`;
+            ctx.lineWidth = 1 / state.zoom;
             [0.25, 0.5, 0.75, 1].forEach(r => {
                 ctx.beginPath();
                 ctx.arc(cx, cy, r * maxDist * scale, 0, 2 * Math.PI);
                 ctx.stroke();
             });
             
+            const pathColor = hexToRgb(document.getElementById('pathColor').value);
             const gradient = ctx.createLinearGradient(0, 0, w, h);
-            gradient.addColorStop(0, 'rgba(50, 100, 255, 0.6)');
-            gradient.addColorStop(1, 'rgba(0, 255, 255, 0.6)');
+            gradient.addColorStop(0, `rgba(${pathColor.r}, ${pathColor.g}, ${pathColor.b}, 0.7)`);
+            gradient.addColorStop(1, `rgba(${Math.min(pathColor.r + 50, 255)}, ${Math.min(pathColor.g + 50, 255)}, ${Math.min(pathColor.b + 50, 255)}, 0.7)`);
             ctx.strokeStyle = gradient;
-            ctx.lineWidth = 1;
+            ctx.lineWidth = 1.5 / state.zoom;
             ctx.beginPath();
             ctx.moveTo(cx, cy);
             pathData.forEach(p => {
@@ -489,56 +734,286 @@
             });
             ctx.stroke();
             
+            const originColor = hexToRgb(document.getElementById('originColor').value);
             ctx.beginPath();
-            ctx.arc(cx, cy, 4, 0, 2 * Math.PI);
-            ctx.fillStyle = '#00ffff';
+            ctx.arc(cx, cy, 5 / state.zoom, 0, 2 * Math.PI);
+            ctx.fillStyle = `rgb(${originColor.r}, ${originColor.g}, ${originColor.b})`;
             ctx.fill();
             
             const last = pathData[pathData.length - 1];
+            const resultColor = hexToRgb(document.getElementById('resultColor').value);
             ctx.beginPath();
-            ctx.arc(cx + last.re * scale, cy - last.im * scale, 5, 0, 2 * Math.PI);
-            ctx.fillStyle = '#ffd700';
+            ctx.arc(cx + last.re * scale, cy - last.im * scale, 6 / state.zoom, 0, 2 * Math.PI);
+            ctx.fillStyle = `rgb(${resultColor.r}, ${resultColor.g}, ${resultColor.b})`;
             ctx.fill();
+            
+            ctx.restore();
+            
+            const maxExc = document.getElementById('statMaxExcursion').textContent;
+            const winding = document.getElementById('statWinding').textContent;
+            
+            drawAdaptiveLegend(ctx, canvas, 'Phase Space Metrics', [
+                { label: 'Max Radius', value: maxExc },
+                { label: 'Winding #', value: winding },
+                { label: 'Efficiency', value: document.getElementById('statEfficiency').textContent }
+            ]);
         }
         
         function renderHistory() {
             const canvas = document.getElementById('historyCanvas');
             const ctx = canvas.getContext('2d');
             const w = canvas.width, h = canvas.height;
+            const state = canvasStates.history;
             
+            ctx.save();
             ctx.fillStyle = '#0a0a10';
             ctx.fillRect(0, 0, w, h);
             
-            if (historyData.length < 2) return;
+            ctx.translate(state.offsetX, state.offsetY);
+            ctx.scale(state.zoom, state.zoom);
+            
+            if (historyData.length < 2) {
+                ctx.restore();
+                return;
+            }
             
             const maxMag = Math.max(...historyData.map(d => d.magnitude), 1);
-            const xScale = w / (historyData.length - 1);
-            const yScale = (h - 20) / maxMag;
+            const xScale = (w - 40) / (historyData.length - 1);
+            const yScale = (h - 40) / maxMag;
             
-            ctx.strokeStyle = '#ffd700';
-            ctx.lineWidth = 1.5;
+            const resultColor = hexToRgb(document.getElementById('resultColor').value);
+            ctx.strokeStyle = `rgb(${resultColor.r}, ${resultColor.g}, ${resultColor.b})`;
+            ctx.lineWidth = 2 / state.zoom;
             ctx.beginPath();
             historyData.forEach((d, i) => {
-                const x = i * xScale;
-                const y = h - 10 - d.magnitude * yScale;
+                const x = 20 + i * xScale;
+                const y = h - 20 - d.magnitude * yScale;
                 if (i === 0) ctx.moveTo(x, y);
                 else ctx.lineTo(x, y);
             });
             ctx.stroke();
             
+            ctx.fillStyle = `rgb(${resultColor.r}, ${resultColor.g}, ${resultColor.b})`;
             historyData.forEach((d, i) => {
-                const x = i * xScale;
-                const y = h - 10 - d.magnitude * yScale;
+                const x = 20 + i * xScale;
+                const y = h - 20 - d.magnitude * yScale;
                 ctx.beginPath();
-                ctx.arc(x, y, 2, 0, 2 * Math.PI);
-                ctx.fillStyle = '#ffd700';
+                ctx.arc(x, y, 2 / state.zoom, 0, 2 * Math.PI);
                 ctx.fill();
             });
+            
+            ctx.restore();
+            
+            const points = historyData.length;
+            const avgMag = (historyData.reduce((sum, d) => sum + d.magnitude, 0) / points).toFixed(6);
+            
+            drawAdaptiveLegend(ctx, canvas, 'History Statistics', [
+                { label: 'Points', value: points.toString() },
+                { label: 'Avg Mag', value: avgMag },
+                { label: 'Max Mag', value: maxMag.toFixed(6) }
+            ]);
+        }
+        
+        function setupCanvasInteraction(canvasId, stateKey) {
+            const canvas = document.getElementById(canvasId);
+            const state = canvasStates[stateKey];
+            
+            canvas.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const delta = e.deltaY > 0 ? 0.9 : 1.1;
+                state.zoom = Math.max(0.1, Math.min(10, state.zoom * delta));
+                
+                if (stateKey === 'main') render();
+                else if (stateKey === 'phase') renderPhaseSpace();
+                else if (stateKey === 'history') renderHistory();
+            });
+            
+            canvas.addEventListener('mousedown', (e) => {
+                state.isDragging = true;
+                state.lastX = e.offsetX;
+                state.lastY = e.offsetY;
+            });
+            
+            canvas.addEventListener('mousemove', (e) => {
+                if (!state.isDragging) return;
+                const dx = e.offsetX - state.lastX;
+                const dy = e.offsetY - state.lastY;
+                state.offsetX += dx;
+                state.offsetY += dy;
+                state.lastX = e.offsetX;
+                state.lastY = e.offsetY;
+                
+                if (stateKey === 'main') render();
+                else if (stateKey === 'phase') renderPhaseSpace();
+                else if (stateKey === 'history') renderHistory();
+            });
+            
+            canvas.addEventListener('mouseup', () => {
+                state.isDragging = false;
+            });
+            
+            canvas.addEventListener('mouseleave', () => {
+                state.isDragging = false;
+            });
+        }
+        
+        function resetZoom(canvasKey) {
+            const state = canvasStates[canvasKey];
+            state.zoom = 1;
+            state.offsetX = 0;
+            state.offsetY = 0;
+            
+            if (canvasKey === 'main') render();
+            else if (canvasKey === 'phase') renderPhaseSpace();
+            else if (canvasKey === 'history') renderHistory();
+        }
+        
+        function exportCanvas(canvasKey) {
+            const canvasMap = {
+                'main': 'mainCanvas',
+                'phase': 'phaseCanvas',
+                'history': 'historyCanvas'
+            };
+            
+            const sourceCanvas = document.getElementById(canvasMap[canvasKey]);
+            const exportCanvas = document.createElement('canvas');
+            exportCanvas.width = 3840;
+            exportCanvas.height = canvasKey === 'main' ? 2160 : (canvasKey === 'phase' ? 1080 : 800);
+            
+            const ctx = exportCanvas.getContext('2d');
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+            
+            const scaleX = exportCanvas.width / sourceCanvas.width;
+            const scaleY = exportCanvas.height / sourceCanvas.height;
+            ctx.scale(scaleX, scaleY);
+            ctx.drawImage(sourceCanvas, 0, 0);
+            
+            const M = document.getElementById('modulus').value;
+            const t = parseFloat(document.getElementById('criticalT').value).toFixed(4);
+            const X = document.getElementById('primeCutoff').value;
+            
+            const titles = {
+                'main': `Vector_Space_M${M}_t${t}_X${X}`,
+                'phase': `Phase_Space_M${M}_t${t}_X${X}`,
+                'history': `Magnitude_History_${historyData.length}pts`
+            };
+            
+            const link = document.createElement('a');
+            link.download = `${titles[canvasKey]}_4K.png`;
+            link.href = exportCanvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        function exportAllPNG() {
+            ['main', 'phase', 'history'].forEach(key => exportCanvas(key));
+        }
+        
+        function exportAllSVG() {
+            ['main', 'phase'].forEach(canvasKey => {
+                const M = document.getElementById('modulus').value;
+                const t = parseFloat(document.getElementById('criticalT').value).toFixed(4);
+                const X = document.getElementById('primeCutoff').value;
+                
+                const dims = canvasKey === 'main' ? { w: 1200, h: 800 } : { w: 1200, h: 300 };
+                let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${dims.w}" height="${dims.h}" style="background:#000">`;
+                
+                const gridColor = hexToRgb(document.getElementById('gridColor').value);
+                const gridOpacity = parseInt(document.getElementById('gridOpacity').value) / 100;
+                
+                if (document.getElementById('showGrid').checked && canvasKey === 'main') {
+                    svg += `<line x1="0" y1="${dims.h/2}" x2="${dims.w}" y2="${dims.h/2}" stroke="rgba(${gridColor.r},${gridColor.g},${gridColor.b},${gridOpacity})" stroke-width="1.5"/>`;
+                    svg += `<line x1="${dims.w/2}" y1="0" x2="${dims.w/2}" y2="${dims.h}" stroke="rgba(${gridColor.r},${gridColor.g},${gridColor.b},${gridOpacity})" stroke-width="1.5"/>`;
+                }
+                
+                if (pathData.length > 0) {
+                    const maxDist = canvasKey === 'main' ? 
+                        Math.max(...pathData.map(p => Math.max(Math.abs(p.re), Math.abs(p.im))), 1) :
+                        Math.max(...pathData.map(p => Math.sqrt(p.re * p.re + p.im * p.im)), 1);
+                    const scale = Math.min(dims.w, dims.h) * 0.35 / maxDist;
+                    const cx = dims.w / 2, cy = dims.h / 2;
+                    
+                    const pathColor = hexToRgb(document.getElementById('pathColor').value);
+                    const opacity = parseInt(document.getElementById('pathOpacity').value) / 100;
+                    
+                    let pathStr = `M${cx},${cy} `;
+                    pathData.forEach(p => {
+                        pathStr += `L${cx + p.re * scale},${cy - p.im * scale} `;
+                    });
+                    svg += `<path d="${pathStr}" fill="none" stroke="rgba(${pathColor.r},${pathColor.g},${pathColor.b},${opacity})" stroke-width="2"/>`;
+                    
+                    const last = pathData[pathData.length - 1];
+                    const resultColor = hexToRgb(document.getElementById('resultColor').value);
+                    svg += `<line x1="${cx}" y1="${cy}" x2="${cx + last.re * scale}" y2="${cy - last.im * scale}" stroke="rgb(${resultColor.r},${resultColor.g},${resultColor.b})" stroke-width="3"/>`;
+                    svg += `<circle cx="${cx + last.re * scale}" cy="${cy - last.im * scale}" r="8" fill="rgb(${resultColor.r},${resultColor.g},${resultColor.b})"/>`;
+                    
+                    const originColor = hexToRgb(document.getElementById('originColor').value);
+                    svg += `<circle cx="${cx}" cy="${cy}" r="6" fill="rgb(${originColor.r},${originColor.g},${originColor.b})"/>`;
+                }
+                
+                svg += `</svg>`;
+                
+                const blob = new Blob([svg], { type: 'image/svg+xml' });
+                const link = document.createElement('a');
+                const titles = {
+                    'main': `Vector_Space_M${M}_t${t}_X${X}`,
+                    'phase': `Phase_Space_M${M}_t${t}_X${X}`
+                };
+                link.download = `${titles[canvasKey]}.svg`;
+                link.href = URL.createObjectURL(blob);
+                link.click();
+            });
+        }
+        
+        function exportCSV() {
+            const M = document.getElementById('modulus').value;
+            const t = parseFloat(document.getElementById('criticalT').value).toFixed(6);
+            const X = document.getElementById('primeCutoff').value;
+            const alpha = document.getElementById('alpha').value;
+            const beta = document.getElementById('beta').value;
+            const gamma = document.getElementById('gamma').value;
+            
+            let csv = `Prime-Phase Vector Data Export\n`;
+            csv += `Modulus M,${M}\nHeight t,${t}\nCutoff X,${X}\n`;
+            csv += `Alpha,${alpha}\nBeta,${beta}\nGamma,${gamma}\n\n`;
+            csv += `Magnitude,${document.getElementById('statMagnitude').textContent}\n`;
+            csv += `Coherence,${document.getElementById('statCoherence').textContent}\n`;
+            csv += `Efficiency,${document.getElementById('statEfficiency').textContent}\n`;
+            csv += `Winding Number,${document.getElementById('statWinding').textContent}\n\n`;
+            csv += `Index,Prime,Real,Imaginary,Distance,Phase\n`;
+            
+            pathData.forEach((p, i) => {
+                const dist = Math.sqrt(p.re * p.re + p.im * p.im);
+                const phase = Math.atan2(p.im, p.re);
+                csv += `${i+1},${p.p},${p.re.toFixed(8)},${p.im.toFixed(8)},${dist.toFixed(8)},${phase.toFixed(8)}\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const link = document.createElement('a');
+            link.download = `Vector_Data_M${M}_t${t}_X${X}_P${pathData.length}.csv`;
+            link.href = URL.createObjectURL(blob);
+            link.click();
+        }
+        
+        function exportHistory() {
+            let csv = `Magnitude History Export\n`;
+            csv += `Total Points,${historyData.length}\n\n`;
+            csv += `t_Parameter,Magnitude,Coherence,Efficiency\n`;
+            historyData.forEach(d => {
+                const efficiency = 1 - d.coherence;
+                csv += `${d.t.toFixed(6)},${d.magnitude.toFixed(8)},${d.coherence.toFixed(8)},${efficiency.toFixed(8)}\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const link = document.createElement('a');
+            link.download = `Magnitude_History_${historyData.length}points.csv`;
+            link.href = URL.createObjectURL(blob);
+            link.click();
         }
         
         function toggleAnimation() {
             isAnimating = !isAnimating;
-            document.getElementById('animateBtn').textContent = isAnimating ? 'Stop' : 'Animate t';
+            document.getElementById('animateBtn').textContent = isAnimating ? 'Stop Animation' : 'Animate t Parameter';
             if (isAnimating) animate();
             else if (animationId) cancelAnimationFrame(animationId);
         }
@@ -557,9 +1032,9 @@
         
         function resetAnimation() {
             isAnimating = false;
-            document.getElementById('animateBtn').textContent = 'Animate t';
+            document.getElementById('animateBtn').textContent = 'Animate t Parameter';
             if (animationId) cancelAnimationFrame(animationId);
-            document.getElementById('criticalT').value = 14.1347;
+            document.getElementById('criticalT').value = 14.134725;
             document.getElementById('tValue').textContent = '14.1347';
             compute();
         }
@@ -570,94 +1045,15 @@
             renderHistory();
         }
         
-        function exportPNG() {
-            const canvas = document.getElementById('mainCanvas');
-            const link = document.createElement('a');
-            const M = document.getElementById('modulus').value;
-            const t = parseFloat(document.getElementById('criticalT').value).toFixed(4);
-            const X = document.getElementById('primeCutoff').value;
-            link.download = `prime_phase_vector_M${M}_t${t}_X${X}.png`;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        }
-        
-        function exportSVG() {
-            const M = document.getElementById('modulus').value;
-            const t = parseFloat(document.getElementById('criticalT').value).toFixed(4);
-            const X = document.getElementById('primeCutoff').value;
-            
-            let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" style="background:#000">`;
-            svg += `<line x1="0" y1="300" x2="900" y2="300" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>`;
-            svg += `<line x1="450" y1="0" x2="450" y2="600" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>`;
-            
-            if (pathData.length > 0) {
-                const maxDist = Math.max(...pathData.map(p => Math.max(Math.abs(p.re), Math.abs(p.im))), 1);
-                const scale = 200 / maxDist;
-                let pathStr = `M450,300 `;
-                pathData.forEach(p => {
-                    pathStr += `L${450 + p.re * scale},${300 - p.im * scale} `;
-                });
-                svg += `<path d="${pathStr}" fill="none" stroke="rgba(100,200,255,0.3)" stroke-width="1.5"/>`;
-                
-                const last = pathData[pathData.length - 1];
-                svg += `<line x1="450" y1="300" x2="${450 + last.re * scale}" y2="${300 - last.im * scale}" stroke="#ffd700" stroke-width="3"/>`;
-                svg += `<circle cx="${450 + last.re * scale}" cy="${300 - last.im * scale}" r="8" fill="#ffd700"/>`;
-                svg += `<circle cx="450" cy="300" r="6" fill="#00ffff"/>`;
-            }
-            
-            svg += `</svg>`;
-            
-            const blob = new Blob([svg], { type: 'image/svg+xml' });
-            const link = document.createElement('a');
-            link.download = `prime_phase_vector_M${M}_t${t}_X${X}.svg`;
-            link.href = URL.createObjectURL(blob);
-            link.click();
-        }
-        
-        function exportCSV() {
-            const M = document.getElementById('modulus').value;
-            const t = parseFloat(document.getElementById('criticalT').value).toFixed(6);
-            const X = document.getElementById('primeCutoff').value;
-            const alpha = document.getElementById('alpha').value;
-            const beta = document.getElementById('beta').value;
-            const gamma = document.getElementById('gamma').value;
-            
-            let csv = `Prime-Phase Vector Data Export\n`;
-            csv += `M,${M}\nt,${t}\nX,${X}\nalpha,${alpha}\nbeta,${beta}\ngamma,${gamma}\n\n`;
-            csv += `Magnitude,${document.getElementById('statMagnitude').textContent}\n`;
-            csv += `Coherence,${document.getElementById('statCoherence').textContent}\n\n`;
-            csv += `Index,Prime,Real,Imaginary,Distance\n`;
-            
-            pathData.forEach((p, i) => {
-                const dist = Math.sqrt(p.re * p.re + p.im * p.im);
-                csv += `${i+1},${p.p},${p.re.toFixed(8)},${p.im.toFixed(8)},${dist.toFixed(8)}\n`;
-            });
-            
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const link = document.createElement('a');
-            link.download = `prime_phase_data_M${M}_t${t}_X${X}.csv`;
-            link.href = URL.createObjectURL(blob);
-            link.click();
-        }
-        
-        function exportHistory() {
-            let csv = `t,Magnitude,Coherence\n`;
-            historyData.forEach(d => {
-                csv += `${d.t.toFixed(6)},${d.magnitude.toFixed(8)},${d.coherence.toFixed(8)}\n`;
-            });
-            
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const link = document.createElement('a');
-            link.download = 'magnitude_history.csv';
-            link.href = URL.createObjectURL(blob);
-            link.click();
-        }
-        
-        ['modulus', 'criticalT', 'primeCutoff', 'alpha', 'beta', 'gamma', 'pathOpacity', 'animSpeed'].forEach(id => {
+        ['modulus', 'criticalT', 'primeCutoff', 'alpha', 'beta', 'gamma', 'pathOpacity', 'gridOpacity', 'animSpeed'].forEach(id => {
             document.getElementById(id).addEventListener('input', function() {
-                const displays = { modulus: 'mValue', criticalT: 'tValue', primeCutoff: 'xValue', alpha: 'alphaValue', beta: 'betaValue', gamma: 'gammaValue', pathOpacity: 'opacityValue', animSpeed: 'speedValue' };
+                const displays = { 
+                    modulus: 'mValue', criticalT: 'tValue', primeCutoff: 'xValue', 
+                    alpha: 'alphaValue', beta: 'betaValue', gamma: 'gammaValue', 
+                    pathOpacity: 'opacityValue', gridOpacity: 'gridOpacityValue', animSpeed: 'speedValue' 
+                };
                 const el = document.getElementById(displays[id]);
-                if (id === 'pathOpacity') el.textContent = this.value + '%';
+                if (id === 'pathOpacity' || id === 'gridOpacity') el.textContent = this.value + '%';
                 else if (['alpha', 'beta', 'gamma', 'criticalT'].includes(id)) el.textContent = parseFloat(this.value).toFixed(4);
                 else el.textContent = this.value;
                 if (!isAnimating) compute();
@@ -665,8 +1061,24 @@
         });
         
         ['showPath', 'showGrid', 'showLegend'].forEach(id => {
-            document.getElementById(id).addEventListener('change', render);
+            document.getElementById(id).addEventListener('change', () => {
+                render();
+                renderPhaseSpace();
+                renderHistory();
+            });
         });
+        
+        ['pathColor', 'resultColor', 'gridColor', 'originColor'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => {
+                render();
+                renderPhaseSpace();
+                renderHistory();
+            });
+        });
+        
+        setupCanvasInteraction('mainCanvas', 'main');
+        setupCanvasInteraction('phaseCanvas', 'phase');
+        setupCanvasInteraction('historyCanvas', 'history');
         
         initZeros();
         compute();
