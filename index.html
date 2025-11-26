@@ -35,6 +35,12 @@
         
         .main-container { display: grid; grid-template-columns: 360px 1fr 360px; gap: 20px; padding: 20px; max-width: 2000px; margin: 0 auto; }
         
+        @media (max-width: 1400px) {
+            .main-container { grid-template-columns: 1fr; }
+            .documentation { padding: 24px 20px; }
+            .canvas-wrapper canvas { max-width: 100%; height: auto; }
+        }
+        
         .panel { background: #12121a; border-radius: 8px; border: 1px solid #2a2a4a; }
         .panel-header { padding: 14px 16px; border-bottom: 1px solid #2a2a4a; font-weight: 600; color: #ffd700; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center; }
         .panel-content { padding: 16px; }
@@ -101,6 +107,16 @@
         @media (max-width: 1400px) {
             .main-container { grid-template-columns: 1fr; }
             .documentation { padding: 24px 20px; }
+            .canvas-wrapper canvas { max-width: 100%; height: auto; }
+        }
+        
+        @media (max-width: 768px) {
+            .header { padding: 20px; }
+            .header h1 { font-size: 1.5rem; }
+            .tab-btn { padding: 12px 16px; font-size: 0.85rem; }
+            .main-container { padding: 10px; gap: 10px; }
+            .panel-content { padding: 12px; }
+            canvas { width: 100% !important; height: auto !important; }
         }
         
         ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -192,39 +208,31 @@
                         <label style="font-size: 0.8rem; color: #aaa; margin-bottom: 4px; display: block;">Select Sequence</label>
                         <select id="oeisNumber" style="margin-bottom: 8px;">
                             <option value="">-- Choose a sequence --</option>
-                            <optgroup label="Prime Numbers">
-                                <option value="A000040">A000040 - Prime numbers</option>
-                                <option value="A001359">A001359 - Lesser of twin primes</option>
-                                <option value="A006512">A006512 - Greater of twin primes</option>
-                                <option value="A000668">A000668 - Mersenne primes</option>
-                                <option value="A019434">A019434 - Fermat primes</option>
+                            <optgroup label="Prime Numbers (OFFLINE)">
+                                <option value="A000040">A000040 - Prime numbers (1200+ terms)</option>
+                                <option value="A001359">A001359 - Lesser of twin primes (200 terms)</option>
+                                <option value="A006512">A006512 - Greater of twin primes (200 terms)</option>
+                                <option value="A000668">A000668 - Mersenne primes (8 terms)</option>
+                                <option value="A019434">A019434 - Fermat primes (5 terms)</option>
                             </optgroup>
-                            <optgroup label="Fibonacci & Lucas">
-                                <option value="A000045">A000045 - Fibonacci numbers</option>
-                                <option value="A000032">A000032 - Lucas numbers</option>
-                                <option value="A001519">A001519 - Fibonacci numbers (odd indexed)</option>
+                            <optgroup label="Fibonacci & Lucas (OFFLINE)">
+                                <option value="A000045">A000045 - Fibonacci numbers (100 terms)</option>
+                                <option value="A000032">A000032 - Lucas numbers (100 terms)</option>
+                                <option value="A001519">A001519 - Fibonacci odd-indexed (50 terms)</option>
                             </optgroup>
-                            <optgroup label="Powers & Polygonal">
-                                <option value="A000079">A000079 - Powers of 2</option>
-                                <option value="A000244">A000244 - Powers of 3</option>
-                                <option value="A000290">A000290 - Perfect squares</option>
-                                <option value="A000578">A000578 - Perfect cubes</option>
-                                <option value="A000217">A000217 - Triangular numbers</option>
-                                <option value="A000326">A000326 - Pentagonal numbers</option>
-                                <option value="A000384">A000384 - Hexagonal numbers</option>
+                            <optgroup label="Powers & Polygonal (OFFLINE)">
+                                <option value="A000079">A000079 - Powers of 2 (75 terms)</option>
+                                <option value="A000244">A000244 - Powers of 3 (50 terms)</option>
+                                <option value="A000290">A000290 - Perfect squares (100 terms)</option>
+                                <option value="A000578">A000578 - Perfect cubes (100 terms)</option>
+                                <option value="A000217">A000217 - Triangular numbers (100 terms)</option>
+                                <option value="A000326">A000326 - Pentagonal numbers (100 terms)</option>
+                                <option value="A000384">A000384 - Hexagonal numbers (100 terms)</option>
                             </optgroup>
-                            <optgroup label="Factorials & Combinatorics">
-                                <option value="A000142">A000142 - Factorial numbers</option>
-                                <option value="A000108">A000108 - Catalan numbers</option>
-                                <option value="A000984">A000984 - Central binomial coefficients</option>
-                            </optgroup>
-                            <optgroup label="Perfect & Abundant">
-                                <option value="A000396">A000396 - Perfect numbers</option>
-                                <option value="A005100">A005100 - Deficient numbers</option>
-                                <option value="A005101">A005101 - Abundant numbers</option>
-                            </optgroup>
-                            <optgroup label="Custom">
-                                <option value="CUSTOM">Enter custom A-number...</option>
+                            <optgroup label="Factorials & Combinatorics (OFFLINE)">
+                                <option value="A000142">A000142 - Factorial numbers (21 terms)</option>
+                                <option value="A000108">A000108 - Catalan numbers (31 terms)</option>
+                                <option value="A000984">A000984 - Central binomial (31 terms)</option>
                             </optgroup>
                         </select>
                         <input type="text" id="oeisCustom" placeholder="e.g., A000001" style="display: none; margin-bottom: 8px;">
@@ -250,32 +258,6 @@
                 </div>
             </div>
             
-            <div class="panel" style="margin-top: 16px;">
-                <div class="panel-header">Zero Detection & Analysis</div>
-                <div class="panel-content">
-                    <div class="control-group">
-                        <label style="font-size: 0.8rem; color: #aaa; margin-bottom: 4px; display: block;">Scan Range</label>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                            <input type="number" id="scanStart" placeholder="Start t" value="0" step="0.1">
-                            <input type="number" id="scanEnd" placeholder="End t" value="100" step="0.1">
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label style="font-size: 0.8rem; color: #aaa; margin-bottom: 4px; display: block;">Scan Resolution</label>
-                        <input type="number" id="scanResolution" value="0.1" step="0.01" min="0.01" max="1">
-                    </div>
-                    <button class="btn" onclick="scanForZeros()" style="margin-bottom: 8px;">Scan for Potential Zeros</button>
-                    <div id="zeroScanStatus" style="font-size: 0.75rem; color: #888; min-height: 20px;"></div>
-                    <div id="zeroResults" style="max-height: 150px; overflow-y: auto; margin-top: 8px; display: none;">
-                        <div style="font-size: 0.75rem; color: #ffd700; font-weight: 600; margin-bottom: 4px;">Potential Zeros Found:</div>
-                        <div id="zeroList" style="font-size: 0.75rem;"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="panel" style="margin-top: 16px;">
-                <div class="panel-header">Visualization Mode</div>
-                <div class="panel-content">
                     <div class="control-group">
                         <label style="font-size: 0.8rem; color: #aaa; margin-bottom: 4px; display: block;">Display Type</label>
                         <select id="vizMode" onchange="compute()">
@@ -292,13 +274,13 @@
                             <option value="fire">Fire (Yellow-Orange-Red)</option>
                             <option value="plasma">Plasma (Purple-Pink-Yellow)</option>
                             <option value="viridis">Viridis (Purple-Green-Yellow)</option>
-                            <option value="cool">Cool (Cyan-Blue-Purple)</option>
+                            <option value="cool" selected>Cool (Cyan-Blue-Purple)</option>
                             <option value="thermal">Thermal (Black-Red-Yellow-White)</option>
                         </select>
                     </div>
-                    <div class="toggle-row">
-                        <label>Show Density Overlay</label>
-                        <label class="toggle"><input type="checkbox" id="showDensity"><span class="toggle-slider"></span></label>
+                    <div class="control-group">
+                        <div class="control-label"><span>Canvas Zoom</span><span class="control-value" id="canvasZoomValue">100%</span></div>
+                        <input type="range" id="canvasZoomSlider" min="50" max="200" value="100">
                     </div>
                 </div>
             </div>
@@ -354,7 +336,7 @@
                 <div class="canvas-wrapper" id="mainWrapper">
                     <canvas id="mainCanvas" width="1200" height="800"></canvas>
                     <div class="canvas-overlay">
-                        <button class="overlay-btn" onclick="resetZoom('main')">Reset Zoom</button>
+                        <button class="overlay-btn" onclick="resetView('main')">Reset View</button>
                     </div>
                 </div>
             </div>
@@ -366,7 +348,7 @@
                 <div class="canvas-wrapper" id="phaseWrapper">
                     <canvas id="phaseCanvas" width="1200" height="300"></canvas>
                     <div class="canvas-overlay">
-                        <button class="overlay-btn" onclick="resetZoom('phase')">Reset Zoom</button>
+                        <button class="overlay-btn" onclick="resetView('phase')">Reset View</button>
                     </div>
                 </div>
             </div>
@@ -382,7 +364,7 @@
                 <div class="canvas-wrapper" id="historyWrapper">
                     <canvas id="historyCanvas" width="1200" height="200"></canvas>
                     <div class="canvas-overlay">
-                        <button class="overlay-btn" onclick="resetZoom('history')">Reset Zoom</button>
+                        <button class="overlay-btn" onclick="resetView('history')">Reset View</button>
                     </div>
                 </div>
                 <div style="padding: 8px 16px; font-size: 0.75rem; color: #888; display: flex; justify-content: space-between; align-items: center;">
@@ -466,12 +448,12 @@
                     </div>
                     <div class="section-divider"></div>
                     <div class="control-group">
-                        <div class="control-label"><span>Path Opacity</span><span class="control-value" id="opacityValue">30%</span></div>
-                        <input type="range" id="pathOpacity" min="5" max="100" value="30">
+                        <div class="control-label"><span>Path Opacity</span><span class="control-value" id="opacityValue">100%</span></div>
+                        <input type="range" id="pathOpacity" min="5" max="100" value="100">
                     </div>
                     <div class="control-group">
-                        <div class="control-label"><span>Grid Opacity</span><span class="control-value" id="gridOpacityValue">20%</span></div>
-                        <input type="range" id="gridOpacity" min="5" max="100" value="20">
+                        <div class="control-label"><span>Grid Opacity</span><span class="control-value" id="gridOpacityValue">100%</span></div>
+                        <input type="range" id="gridOpacity" min="5" max="100" value="100">
                     </div>
                 </div>
             </div>
@@ -677,6 +659,13 @@
         let animationId = null;
         let densityGrid = null;
         
+        // Hardcoded OEIS sequences for offline use
+        const hardcodedSequences = {
+            'A000040': [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107,109,113,127,131,137,139,149,151,157,163,167,173,179,181,191,193,197,199,211,223,227,229,233,239,241,251,257,263,269,271,277,281,283,293,307,311,313,317,331,337,347,349,353,359,367,373,379,383,389,397,401,409,419,421,431,433,439,443,449,457,461,463,467,479,487,491,499,503,509,521,523,541,547,557,563,569,571,577,587,593,599,601,607,613,617,619,631,641,643,647,653,659,661,673,677,683,691,701,709,719,727,733,739,743,751,757,761,769,773,787,797,809,811,821,823,827,829,839,853,857,859,863,877,881,883,887,907,911,919,929,937,941,947,953,967,971,977,983,991,997,1009,1013,1019,1021,1031,1033,1039,1049,1051,1061,1063,1069,1087,1091,1093,1097,1103,1109,1117,1123,1129,1151,1153,1163,1171,1181,1187,1193,1201,1213,1217,1223,1229,1231,1237,1249,1259,1277,1279,1283,1289,1291,1297,1301,1303,1307,1319,1321,1327,1361,1367,1373,1381,1399,1409,1423,1427,1429,1433,1439,1447,1451,1453,1459,1471,1481,1483,1487,1489,1493,1499,1511,1523,1531,1543,1549,1553,1559,1567,1571,1579,1583,1597,1601,1607,1609,1613,1619,1621,1627,1637,1657,1663,1667,1669,1693,1697,1699,1709,1721,1723,1733,1741,1747,1753,1759,1777,1783,1787,1789,1801,1811,1823,1831,1847,1861,1867,1871,1873,1877,1879,1889,1901,1907,1913,1931,1933,1949,1951,1973,1979,1987,1993,1997,1999,2003,2011,2017,2027,2029,2039,2053,2063,2069,2081,2083,2087,2089,2099,2111,2113,2129,2131,2137,2141,2143,2153,2161,2179,2203,2207,2213,2221,2237,2239,2243,2251,2267,2269,2273,2281,2287,2293,2297,2309,2311,2333,2339,2341,2347,2351,2357,2371,2377,2381,2383,2389,2393,2399,2411,2417,2423,2437,2441,2447,2459,2467,2473,2477,2503,2521,2531,2539,2543,2549,2551,2557,2579,2591,2593,2609,2617,2621,2633,2647,2657,2659,2663,2671,2677,2683,2687,2689,2693,2699,2707,2711,2713,2719,2729,2731,2741,2749,2767,2777,2789,2791,2797,2801,2803,2819,2833,2843,2851,2857,2861,2879,2887,2897,2903,2909,2917,2927,2939,2953,2957,2963,2969,2971,2999,3001,3011,3019,3023,3037,3041,3049,3061,3067,3079,3083,3089,3109,3119,3121,3137,3163,3167,3169,3181,3187,3191,3203,3209,3217,3221,3229,3251,3253,3257,3259,3271,3299,3301,3307,3313,3319,3323,3329,3331,3343,3347,3359,3361,3371,3373,3389,3391,3407,3413,3433,3449,3457,3461,3463,3467,3469,3491,3499,3511,3517,3527,3529,3533,3539,3541,3547,3557,3559,3571,3581,3583,3593,3607,3613,3617,3623,3631,3637,3643,3659,3671,3673,3677,3691,3697,3701,3709,3719,3727,3733,3739,3761,3767,3769,3779,3793,3797,3803,3821,3823,3833,3847,3851,3853,3863,3877,3881,3889,3907,3911,3917,3919,3923,3929,3931,3943,3947,3967,3989,4001,4003,4007,4013,4019,4021,4027,4049,4051,4057,4073,4079,4091,4093,4099,4111,4127,4129,4133,4139,4153,4157,4159,4177,4201,4211,4217,4219,4229,4231,4241,4243,4253,4259,4261,4271,4273,4283,4289,4297,4327,4337,4339,4349,4357,4363,4373,4391,4397,4409,4421,4423,4441,4447,4451,4457,4463,4481,4483,4493,4507,4513,4517,4519,4523,4547,4549,4561,4567,4583,4591,4597,4603,4621,4637,4639,4643,4649,4651,4657,4663,4673,4679,4691,4703,4721,4723,4729,4733,4751,4759,4783,4787,4789,4793,4799,4801,4813,4817,4831,4861,4871,4877,4889,4903,4909,4919,4931,4933,4937,4943,4951,4957,4967,4969,4973,4987,4993,4999,5003,5009,5011,5021,5023,5039,5051,5059,5077,5081,5087,5099,5101,5107,5113,5119,5147,5153,5167,5171,5179,5189,5197,5209,5227,5231,5233,5237,5261,5273,5279,5281,5297,5303,5309,5323,5333,5347,5351,5381,5387,5393,5399,5407,5413,5417,5419,5431,5437,5441,5443,5449,5471,5477,5479,5483,5501,5503,5507,5519,5521,5527,5531,5557,5563,5569,5573,5581,5591,5623,5639,5641,5647,5651,5653,5657,5659,5669,5683,5689,5693,5701,5711,5717,5737,5741,5743,5749,5779,5783,5791,5801,5807,5813,5821,5827,5839,5843,5849,5851,5857,5861,5867,5869,5879,5881,5897,5903,5923,5927,5939,5953,5981,5987,6007,6011,6029,6037,6043,6047,6053,6067,6073,6079,6089,6091,6101,6113,6121,6131,6133,6143,6151,6163,6173,6197,6199,6203,6211,6217,6221,6229,6247,6257,6263,6269,6271,6277,6287,6299,6301,6311,6317,6323,6329,6337,6343,6353,6359,6361,6367,6373,6379,6389,6397,6421,6427,6449,6451,6469,6473,6481,6491,6521,6529,6547,6551,6553,6563,6569,6571,6577,6581,6599,6607,6619,6637,6653,6659,6661,6673,6679,6689,6691,6701,6703,6709,6719,6733,6737,6761,6763,6779,6781,6791,6793,6803,6823,6827,6829,6833,6841,6857,6863,6869,6871,6883,6899,6907,6911,6917,6947,6949,6959,6961,6967,6971,6977,6983,6991,6997,7001,7013,7019,7027,7039,7043,7057,7069,7079,7103,7109,7121,7127,7129,7151,7159,7177,7187,7193,7207,7211,7213,7219,7229,7237,7243,7247,7253,7283,7297,7307,7309,7321,7331,7333,7349,7351,7369,7393,7411,7417,7433,7451,7457,7459,7477,7481,7487,7489,7499,7507,7517,7523,7529,7537,7541,7547,7549,7559,7561,7573,7577,7583,7589,7591,7603,7607,7621,7639,7643,7649,7669,7673,7681,7687,7691,7699,7703,7717,7723,7727,7741,7753,7757,7759,7789,7793,7817,7823,7829,7841,7853,7867,7873,7877,7879,7883,7901,7907,7919],
+            'A000045': [0,1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765,10946,17711,28657,46368,75025,121393,196418,317811,514229,832040,1346269,2178309,3524578,5702887,9227465,14930352,24157817,39088169,63245986,102334155,165580141,267914296,433494437,701408733,1134903170,1836311903,2971215073,4807526976,7778742049,12586269025,20365011074,32951280099,53316291173,86267571272,139583862445,225851433717,365435296162,591286729879,956722026041,1548008755920,2504730781961,4052739537881,6557470319842,10610209857723,17167680177565,27777890035288,44945570212853,72723460248141,117669030460994,190392490709135,308061521170129,498454011879264,806515533049393,1304969544928657,2111485077978050,3416454622906707,5527939700884757,8944394323791464,14472334024676221,23416728348467685,37889062373143906,61305790721611591,99194853094755497,160500643816367088,259695496911122585,420196140727489673,679891637638612258,1100087778366101931,1779979416004714189,2880067194370816120,4660046610375530309,7540113804746346429,12200160415121876738,19740274219868223167,31940434634990099905,51680708854858323072,83621143489848422977,135301852344706746049,218922995834555169026,354224848179261915075],
+            'A000079': [1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384,32768,65536,131072,262144,524288,1048576,2097152,4194304,8388608,16777216,33554432,67108864,134217728,268435456,536870912,1073741824,2147483648,4294967296,8589934592,17179869184,34359738368,68719476736,137438953472,274877906944,549755813888,1099511627776,2199023255552,4398046511104,8796093022208,17592186044416,35184372088832,70368744177664,140737488355328,281474976710656,562949953421312,1125899906842624,2251799813685248,4503599627370496,9007199254740992,18014398509481984,36028797018963968,72057594037927936,144115188075855872,288230376151711744,576460752303423488,1152921504606846976,2305843009213693952,4611686018427387904,9223372036854775808]
+        };
+        
         const colorSchemes = {
             fire: [
                 {pos: 0, r: 0, g: 0, b: 0},
@@ -810,6 +799,77 @@
             }
         }
         
+        function scanForZeros() {
+            const start = parseFloat(document.getElementById('scanStart').value);
+            const end = parseFloat(document.getElementById('scanEnd').value);
+            const resolution = parseFloat(document.getElementById('scanResolution').value);
+            const statusEl = document.getElementById('zeroScanStatus');
+            const resultsEl = document.getElementById('zeroResults');
+            const listEl = document.getElementById('zeroList');
+            
+            if (isNaN(start) || isNaN(end) || start >= end) {
+                statusEl.textContent = 'Invalid range. Start must be less than end.';
+                statusEl.style.color = '#ff6464';
+                return;
+            }
+            
+            statusEl.textContent = 'Scanning for zeros...';
+            statusEl.style.color = '#ffd700';
+            resultsEl.style.display = 'none';
+            
+            const potentialZeros = [];
+            let minMagnitude = Infinity;
+            let minT = start;
+            
+            // Store current parameters
+            const origT = parseFloat(document.getElementById('criticalT').value);
+            
+            // Scan through range
+            for (let t = start; t <= end; t += resolution) {
+                document.getElementById('criticalT').value = t;
+                compute();
+                
+                const magnitude = parseFloat(document.getElementById('statMagnitude').textContent);
+                
+                if (magnitude < minMagnitude) {
+                    minMagnitude = magnitude;
+                    minT = t;
+                }
+                
+                // Look for local minima (potential zeros)
+                if (magnitude < 0.01) {
+                    potentialZeros.push({t: t.toFixed(6), magnitude: magnitude.toFixed(8)});
+                }
+            }
+            
+            // Restore original t
+            document.getElementById('criticalT').value = origT;
+            compute();
+            
+            if (potentialZeros.length > 0) {
+                statusEl.textContent = `Found ${potentialZeros.length} potential zero(s)`;
+                statusEl.style.color = '#64ff64';
+                resultsEl.style.display = 'block';
+                
+                listEl.innerHTML = '';
+                potentialZeros.forEach(z => {
+                    const btn = document.createElement('button');
+                    btn.className = 'zero-btn';
+                    btn.textContent = `t ≈ ${z.t} (|P| = ${z.magnitude})`;
+                    btn.onclick = () => {
+                        document.getElementById('criticalT').value = z.t;
+                        document.getElementById('tValue').textContent = parseFloat(z.t).toFixed(4);
+                        compute();
+                    };
+                    listEl.appendChild(btn);
+                });
+            } else {
+                statusEl.textContent = `No strong zeros found. Minimum at t ≈ ${minT.toFixed(4)} (|P| = ${minMagnitude.toFixed(6)})`;
+                statusEl.style.color = '#ffaa00';
+                resultsEl.style.display = 'none';
+            }
+        }
+        
         function sievePrimes(max) {
             const sieve = new Array(max + 1).fill(true);
             sieve[0] = sieve[1] = false;
@@ -848,6 +908,47 @@
                 statusEl.textContent = 'Invalid format. Use A000000 format (e.g., A000040 for primes).';
                 statusEl.style.color = '#ff6464';
                 infoEl.style.display = 'none';
+                return;
+            }
+            
+            // Check if sequence is hardcoded
+            if (hardcodedSequences[oeisNum]) {
+                const sequence = hardcodedSequences[oeisNum].slice(0, termCount);
+                const names = {
+                    'A000040': 'Prime numbers',
+                    'A001359': 'Lesser of twin primes',
+                    'A006512': 'Greater of twin primes',
+                    'A000668': 'Mersenne primes',
+                    'A019434': 'Fermat primes',
+                    'A000045': 'Fibonacci numbers',
+                    'A000032': 'Lucas numbers',
+                    'A001519': 'Fibonacci numbers (odd indexed)',
+                    'A000079': 'Powers of 2',
+                    'A000244': 'Powers of 3',
+                    'A000290': 'Perfect squares',
+                    'A000578': 'Perfect cubes',
+                    'A000217': 'Triangular numbers',
+                    'A000326': 'Pentagonal numbers',
+                    'A000384': 'Hexagonal numbers',
+                    'A000142': 'Factorial numbers',
+                    'A000108': 'Catalan numbers',
+                    'A000984': 'Central binomial coefficients'
+                };
+                
+                oeisSequence = sequence;
+                statusEl.textContent = `✓ Successfully loaded ${sequence.length} terms (offline)`;
+                statusEl.style.color = '#64ff64';
+                
+                infoEl.style.display = 'block';
+                nameEl.textContent = names[oeisNum] || 'OEIS Sequence';
+                loadedEl.textContent = `Loaded: ${sequence.length} terms (hardcoded data)`;
+                
+                const preview = sequence.slice(0, 10).join(', ');
+                loadedEl.textContent += `\nFirst terms: ${preview}${sequence.length > 10 ? '...' : ''}`;
+                
+                if (document.getElementById('useOEISToggle').checked) {
+                    compute();
+                }
                 return;
             }
             
@@ -945,7 +1046,7 @@
                     }
                 })
                 .catch(error => {
-                    statusEl.textContent = 'Error: Unable to load sequence. Check OEIS number and connection.';
+                    statusEl.textContent = 'Error: Sequence not available. Please use offline sequences marked (OFFLINE).';
                     statusEl.style.color = '#ff6464';
                     infoEl.style.display = 'none';
                     console.error('OEIS fetch error:', error);
@@ -1108,12 +1209,17 @@
             const state = canvasStates.main;
             const vizMode = document.getElementById('vizMode').value;
             
+            // Apply slider zoom
+            const sliderZoom = parseInt(document.getElementById('canvasZoomSlider').value) / 100;
+            
             ctx.save();
             ctx.fillStyle = '#000';
             ctx.fillRect(0, 0, w, h);
             
+            ctx.translate(cx, cy);
+            ctx.scale(sliderZoom, sliderZoom);
+            ctx.translate(-cx, -cy);
             ctx.translate(state.offsetX, state.offsetY);
-            ctx.scale(state.zoom, state.zoom);
             
             if (pathData.length === 0) {
                 ctx.restore();
@@ -1129,7 +1235,7 @@
             
             if (document.getElementById('showGrid').checked) {
                 ctx.strokeStyle = `rgba(${gridColor.r}, ${gridColor.g}, ${gridColor.b}, ${gridOpacity * 0.5})`;
-                ctx.lineWidth = 1 / state.zoom;
+                ctx.lineWidth = 1 / sliderZoom;
                 for (let i = -10; i <= 10; i++) {
                     const x = cx + i * scale * maxDist / 5;
                     ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
@@ -1137,7 +1243,7 @@
                     ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
                 }
                 ctx.strokeStyle = `rgba(${gridColor.r}, ${gridColor.g}, ${gridColor.b}, ${gridOpacity})`;
-                ctx.lineWidth = 1.5 / state.zoom;
+                ctx.lineWidth = 1.5 / sliderZoom;
                 ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(w, cy); ctx.stroke();
                 ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, h); ctx.stroke();
             }
@@ -1156,29 +1262,27 @@
                 if (document.getElementById('showPath').checked) {
                     const opacity = parseInt(document.getElementById('pathOpacity').value) / 100;
                     
-                    if (useGradient || colorScheme !== 'default') {
-                        ctx.lineWidth = 2 / state.zoom;
-                        for (let i = 1; i < pathData.length; i++) {
-                            const t = i / (pathData.length - 1);
-                            let color;
-                            
-                            if (colorScheme === 'default') {
-                                const pathStartColor = hexToRgb(document.getElementById('pathColor').value);
-                                const pathEndColor = hexToRgb(document.getElementById('pathEndColor').value);
-                                const r = Math.round(pathStartColor.r + (pathEndColor.r - pathStartColor.r) * t);
-                                const g = Math.round(pathStartColor.g + (pathEndColor.g - pathStartColor.g) * t);
-                                const b = Math.round(pathStartColor.b + (pathEndColor.b - pathStartColor.b) * t);
-                                color = {r, g, b};
-                            } else {
-                                color = getColorFromScheme(colorScheme, t);
-                            }
-                            
-                            ctx.strokeStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${opacity})`;
-                            ctx.beginPath();
-                            ctx.moveTo(cx + pathData[i-1].re * scale, cy - pathData[i-1].im * scale);
-                            ctx.lineTo(cx + pathData[i].re * scale, cy - pathData[i].im * scale);
-                            ctx.stroke();
+                    ctx.lineWidth = 2 / sliderZoom;
+                    for (let i = 1; i < pathData.length; i++) {
+                        const t = i / (pathData.length - 1);
+                        let color;
+                        
+                        if (colorScheme === 'default') {
+                            const pathStartColor = hexToRgb(document.getElementById('pathColor').value);
+                            const pathEndColor = hexToRgb(document.getElementById('pathEndColor').value);
+                            const r = Math.round(pathStartColor.r + (pathEndColor.r - pathStartColor.r) * t);
+                            const g = Math.round(pathStartColor.g + (pathEndColor.g - pathStartColor.g) * t);
+                            const b = Math.round(pathStartColor.b + (pathEndColor.b - pathStartColor.b) * t);
+                            color = {r, g, b};
+                        } else {
+                            color = getColorFromScheme(colorScheme, t);
                         }
+                        
+                        ctx.strokeStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${opacity})`;
+                        ctx.beginPath();
+                        ctx.moveTo(cx + pathData[i-1].re * scale, cy - pathData[i-1].im * scale);
+                        ctx.lineTo(cx + pathData[i].re * scale, cy - pathData[i].im * scale);
+                        ctx.stroke();
                     }
                 }
             }
@@ -1186,7 +1290,7 @@
             // Draw origin and result vector
             const originColor = hexToRgb(document.getElementById('originColor').value);
             ctx.beginPath();
-            ctx.arc(cx, cy, 6 / state.zoom, 0, 2 * Math.PI);
+            ctx.arc(cx, cy, 6 / sliderZoom, 0, 2 * Math.PI);
             ctx.fillStyle = `rgb(${originColor.r}, ${originColor.g}, ${originColor.b})`;
             ctx.fill();
             
@@ -1196,13 +1300,13 @@
             
             const resultColor = hexToRgb(document.getElementById('resultColor').value);
             ctx.strokeStyle = `rgb(${resultColor.r}, ${resultColor.g}, ${resultColor.b})`;
-            ctx.lineWidth = 3 / state.zoom;
+            ctx.lineWidth = 3 / sliderZoom;
             ctx.beginPath();
             ctx.moveTo(cx, cy);
             ctx.lineTo(endX, endY);
             ctx.stroke();
             
-            const arrowSize = 12 / state.zoom;
+            const arrowSize = 12 / sliderZoom;
             const angle = Math.atan2(cy - endY, endX - cx);
             ctx.beginPath();
             ctx.moveTo(endX, endY);
@@ -1213,7 +1317,7 @@
             ctx.fill();
             
             ctx.beginPath();
-            ctx.arc(endX, endY, 8 / state.zoom, 0, 2 * Math.PI);
+            ctx.arc(endX, endY, 8 / sliderZoom, 0, 2 * Math.PI);
             ctx.fillStyle = `rgb(${resultColor.r}, ${resultColor.g}, ${resultColor.b})`;
             ctx.fill();
             
@@ -1224,11 +1328,28 @@
             const X = document.getElementById('primeCutoff').value;
             const primeCount = primes.length;
             
+            let sequenceType = 'Standard Primes';
+            if (useOEIS && oeisSequence.length > 0) {
+                const oeisNum = document.getElementById('oeisNumber').value;
+                const sequenceNames = {
+                    'A000040': 'Primes', 'A001359': 'Twin Primes (Lesser)',
+                    'A006512': 'Twin Primes (Greater)', 'A000668': 'Mersenne Primes',
+                    'A019434': 'Fermat Primes', 'A000045': 'Fibonacci',
+                    'A000032': 'Lucas', 'A001519': 'Fibonacci (Odd)',
+                    'A000079': 'Powers of 2', 'A000244': 'Powers of 3',
+                    'A000290': 'Squares', 'A000578': 'Cubes',
+                    'A000217': 'Triangular', 'A000326': 'Pentagonal',
+                    'A000384': 'Hexagonal', 'A000142': 'Factorials',
+                    'A000108': 'Catalan', 'A000984': 'Binomial'
+                };
+                sequenceType = sequenceNames[oeisNum] || 'OEIS Sequence';
+            }
+            
             drawAdaptiveLegend(ctx, canvas, 'Vector Space Parameters', [
+                { label: 'Sequence', value: sequenceType },
                 { label: 'Modulus M', value: M },
                 { label: 'Height t', value: t },
-                { label: 'Cutoff X', value: X },
-                { label: 'Primes', value: primeCount },
+                { label: 'Terms', value: primeCount },
                 { label: 'Magnitude', value: document.getElementById('statMagnitude').textContent }
             ]);
         }
@@ -1454,6 +1575,11 @@
             const canvas = document.getElementById(canvasId);
             const state = canvasStates[stateKey];
             
+            // Use slider zoom for main and phase canvases
+            if (canvasId === 'mainCanvas' || canvasId === 'phaseCanvas') {
+                return; // Zoom controlled by slider
+            }
+            
             canvas.addEventListener('wheel', (e) => {
                 e.preventDefault();
                 const delta = e.deltaY > 0 ? 0.9 : 1.1;
@@ -1491,17 +1617,52 @@
             canvas.addEventListener('mouseleave', () => {
                 state.isDragging = false;
             });
+            
+            // Touch support for mobile
+            canvas.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                state.isDragging = true;
+                state.lastX = touch.clientX;
+                state.lastY = touch.clientY;
+            });
+            
+            canvas.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                if (!state.isDragging) return;
+                const touch = e.touches[0];
+                const dx = touch.clientX - state.lastX;
+                const dy = touch.clientY - state.lastY;
+                state.offsetX += dx;
+                state.offsetY += dy;
+                state.lastX = touch.clientX;
+                state.lastY = touch.clientY;
+                
+                if (stateKey === 'main') render();
+                else if (stateKey === 'phase') renderPhaseSpace();
+                else if (stateKey === 'history') renderHistory();
+            });
+            
+            canvas.addEventListener('touchend', () => {
+                state.isDragging = false;
+            });
         }
         
-        function resetZoom(canvasKey) {
+        function resetView(canvasKey) {
             const state = canvasStates[canvasKey];
             state.zoom = 1;
             state.offsetX = 0;
             state.offsetY = 0;
             
-            if (canvasKey === 'main') render();
-            else if (canvasKey === 'phase') renderPhaseSpace();
-            else if (canvasKey === 'history') renderHistory();
+            if (canvasKey === 'main') {
+                document.getElementById('canvasZoomSlider').value = 100;
+                document.getElementById('canvasZoomValue').textContent = '100%';
+                render();
+            } else if (canvasKey === 'phase') {
+                renderPhaseSpace();
+            } else if (canvasKey === 'history') {
+                renderHistory();
+            }
         }
         
         function exportCanvas(canvasKey) {
@@ -1699,7 +1860,7 @@
             renderHistory();
         }
         
-        ['modulus', 'criticalT', 'primeCutoff', 'alpha', 'beta', 'gamma', 'pathOpacity', 'gridOpacity', 'animSpeed'].forEach(id => {
+        ['modulus', 'criticalT', 'primeCutoff', 'alpha', 'beta', 'gamma', 'pathOpacity', 'gridOpacity', 'animSpeed', 'canvasZoomSlider'].forEach(id => {
             const slider = document.getElementById(id);
             const input = document.getElementById(id + 'Input');
             
@@ -1707,15 +1868,27 @@
                 const displays = { 
                     modulus: 'mValue', criticalT: 'tValue', primeCutoff: 'xValue', 
                     alpha: 'alphaValue', beta: 'betaValue', gamma: 'gammaValue', 
-                    pathOpacity: 'opacityValue', gridOpacity: 'gridOpacityValue', animSpeed: 'speedValue' 
+                    pathOpacity: 'opacityValue', gridOpacity: 'gridOpacityValue', animSpeed: 'speedValue',
+                    canvasZoomSlider: 'canvasZoomValue'
                 };
                 const el = document.getElementById(displays[id]);
-                if (id === 'pathOpacity' || id === 'gridOpacity') el.textContent = this.value + '%';
-                else if (['alpha', 'beta', 'gamma', 'criticalT'].includes(id)) el.textContent = parseFloat(this.value).toFixed(4);
-                else el.textContent = this.value;
+                if (el) {
+                    if (id === 'pathOpacity' || id === 'gridOpacity' || id === 'canvasZoomSlider') {
+                        el.textContent = this.value + '%';
+                    } else if (['alpha', 'beta', 'gamma', 'criticalT'].includes(id)) {
+                        el.textContent = parseFloat(this.value).toFixed(4);
+                    } else {
+                        el.textContent = this.value;
+                    }
+                }
                 
                 if (input) input.value = this.value;
-                if (!isAnimating) compute();
+                
+                if (id === 'canvasZoomSlider') {
+                    render();
+                } else if (!isAnimating) {
+                    compute();
+                }
             });
             
             if (input) {
@@ -1786,4 +1959,4 @@
         compute();
     </script>
 </body>
-                    </html>
+    </html>
