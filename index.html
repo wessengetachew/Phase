@@ -8,6 +8,14 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0a0a0f; color: #e0e0e0; }
         
+        .tab-navigation { background: #12121a; border-bottom: 2px solid #2a2a4a; display: flex; justify-content: center; padding: 0 40px; }
+        .tab-btn { background: transparent; border: none; color: #888; padding: 16px 32px; font-size: 0.95rem; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.3s; }
+        .tab-btn:hover { color: #ffd700; background: rgba(255, 215, 0, 0.05); }
+        .tab-btn.active { color: #ffd700; border-bottom-color: #ffd700; }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
         .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 32px 40px; border-bottom: 1px solid #2a2a4a; }
         .header h1 { font-size: 2rem; color: #ffd700; margin-bottom: 8px; letter-spacing: -0.5px; }
         .header .subtitle { color: #aaa; font-size: 1rem; margin-bottom: 12px; }
@@ -20,6 +28,8 @@
         .doc-section p { line-height: 1.7; margin-bottom: 12px; color: #ccc; }
         .doc-section ul { margin-left: 24px; line-height: 1.8; color: #ccc; }
         .doc-section li { margin-bottom: 8px; }
+        .doc-section a { color: #ffd700; text-decoration: none; transition: opacity 0.2s; }
+        .doc-section a:hover { opacity: 0.7; text-decoration: underline; }
         
         .formula-block { background: #1a1a2a; padding: 16px; border-radius: 6px; font-family: 'Times New Roman', serif; font-size: 1.2rem; text-align: center; color: #ffd700; margin: 16px 0; border-left: 4px solid #ffd700; }
         
@@ -106,92 +116,46 @@
         <div class="author">by Wessen Getachew | @7dview</div>
     </header>
     
-    <div class="documentation">
-        <div class="doc-section">
-            <h2>Overview</h2>
-            <p>This visualization tool explores the deep connections between modular arithmetic structures and the Riemann zeta function through complex vector summation. By representing prime numbers as vectors in the complex plane with phases determined by both modular reduction and critical line dynamics, we can observe emergent patterns that may illuminate the distribution of Riemann zeros.</p>
-        </div>
-        
-        <div class="doc-section">
-            <h2>Mathematical Framework</h2>
-            <p>The core mathematical object under investigation is the prime-phase vector function:</p>
-            <div class="formula-block">P<sub>t</sub>(M) = Σ<sub>p≤X</sub> [e<sup>2πiγp/M</sup> / p<sup>β</sup>] · e<sup>-iαt·ln(p)</sup></div>
-            
-            <h3>Parameter Definitions</h3>
-            <ul>
-                <li><strong>M (Modulus Ring):</strong> The modular arithmetic base defining the residue class structure. This parameter controls the periodic spacing of phases in the complex plane.</li>
-                <li><strong>t (Critical Line Height):</strong> The imaginary component of the Riemann zeta function argument s = 1/2 + it. When t corresponds to a Riemann zero, special cancellation patterns emerge.</li>
-                <li><strong>X (Prime Cutoff):</strong> The upper bound for prime summation. Larger values provide more complete vector sums but require more computational resources.</li>
-                <li><strong>α (Phase Multiplier):</strong> Scaling factor for the critical line phase component. Standard value is 1, but variations reveal phase sensitivity.</li>
-                <li><strong>β (Magnitude Exponent):</strong> Power law exponent controlling magnitude decay. The classical value β = 1/2 corresponds to the critical line of ζ(s).</li>
-                <li><strong>γ (Modular Weight):</strong> Coefficient controlling the influence of modular phase structure relative to critical line dynamics.</li>
-            </ul>
-            
-            <h3>Vector Construction</h3>
-            <p>For each prime p ≤ X, we construct a complex vector with two phase components:</p>
-            <ul>
-                <li><strong>Modular Phase:</strong> θ<sub>mod</sub> = 2πγp/M, creating a discrete rotational structure based on residue classes.</li>
-                <li><strong>Critical Phase:</strong> θ<sub>crit</sub> = -αt·ln(p), encoding the logarithmic growth structure tied to the Riemann zeta function.</li>
-                <li><strong>Magnitude:</strong> |v<sub>p</sub>| = 1/p<sup>β</sup>, implementing a power law decay matching the analytic structure of L-functions.</li>
-            </ul>
-            
-            <h3>Statistical Metrics</h3>
-            <p>The tool computes real-time diagnostic statistics to quantify vector behavior:</p>
-            <ul>
-                <li><strong>Total Magnitude |P<sub>t</sub>|:</strong> The norm of the final cumulative vector, measuring net constructive interference.</li>
-                <li><strong>Coherence Score:</strong> C<sub>t</sub> = 1 - (|P<sub>t</sub>| / Σ|v<sub>p</sub>|), quantifying destructive interference. Values near 1 indicate strong cancellation.</li>
-                <li><strong>Path Length:</strong> Σ|v<sub>p</sub>|, the total distance traversed by the cumulative vector tip through the complex plane.</li>
-                <li><strong>Efficiency Ratio:</strong> |P<sub>t</sub>| / Σ|v<sub>p</sub>|, the ratio of direct distance to total path length. Low values indicate circuitous paths with cancellation.</li>
-                <li><strong>Maximum Excursion:</strong> The furthest distance the cumulative vector reaches from the origin during summation.</li>
-                <li><strong>Winding Number:</strong> The total angular rotation of the cumulative vector divided by 2π. Non-integer values reveal complex phase dynamics.</li>
-                <li><strong>Cancellation Index:</strong> 1 - (|P<sub>t</sub>| / Σ|v<sub>p</sub>|), an alternative measure of interference strength.</li>
-            </ul>
-        </div>
-        
-        <div class="doc-section">
-            <h2>Research Applications</h2>
-            <p>This tool enables investigation of several key mathematical questions:</p>
-            <ul>
-                <li><strong>Riemann Hypothesis Connection:</strong> By setting t to known Riemann zeros and exploring parameter space, we can identify modular structures that exhibit enhanced cancellation, potentially revealing algebraic or geometric properties of the zeros.</li>
-                <li><strong>Prime Distribution Patterns:</strong> The cumulative vector path visualizes how prime residue patterns interact with logarithmic phase spacing, offering geometric insight into number-theoretic phenomena.</li>
-                <li><strong>Modular-Analytic Correspondence:</strong> The interplay between discrete modular structure (M, γ) and continuous analytic structure (t, α, β) may illuminate connections between algebraic number theory and complex analysis.</li>
-                <li><strong>Phase Transition Detection:</strong> Monitoring statistics like coherence and winding number as parameters vary can reveal critical thresholds where qualitative behavior changes.</li>
-            </ul>
-        </div>
-        
-        <div class="doc-section">
-            <h2>Interactive Features</h2>
-            <ul>
-                <li><strong>Real-Time Visualization:</strong> All three canvases (main vector space, phase space, magnitude history) update dynamically as parameters change.</li>
-                <li><strong>Riemann Zero Presets:</strong> One-click navigation to the first 30 non-trivial Riemann zeros for immediate investigation of zero-correlated behavior.</li>
-                <li><strong>Animation Mode:</strong> Automated scanning through t-parameter space with adjustable speed, enabling observation of continuous transitions.</li>
-                <li><strong>Adaptive Legends:</strong> Each canvas includes a dynamic legend displaying current parameters and key statistics without visual overlap.</li>
-                <li><strong>Zoom and Pan:</strong> Mouse wheel zoom and click-drag panning for detailed examination of vector structures.</li>
-                <li><strong>Color Customization:</strong> Full control over vector path, grid, result vector, and background colors for optimal visual clarity and presentation.</li>
-                <li><strong>High-Resolution Export:</strong> PNG export at 4K resolution (3840×2160) for publication-quality figures, plus SVG for vector graphics and CSV for numerical data.</li>
-            </ul>
-        </div>
+    <div class="tab-navigation">
+        <button class="tab-btn active" onclick="switchTab('visualization')">Visualization</button>
+        <button class="tab-btn" onclick="switchTab('documentation')">Mathematical Framework</button>
+        <button class="tab-btn" onclick="switchTab('credits')">Credits & References</button>
     </div>
     
-    <div class="main-container">
+    <div id="visualizationTab" class="tab-content active">
+        <div class="documentation">
+            <div class="doc-section">
+                <h2>Overview</h2>
+                <p>This visualization tool explores the deep connections between modular arithmetic structures and the Riemann zeta function through complex vector summation. By representing prime numbers as vectors in the complex plane with phases determined by both modular reduction and critical line dynamics, we can observe emergent patterns that may illuminate the distribution of Riemann zeros.</p>
+            </div>
+            
+            <div class="doc-section">
+                <h2>Core Mathematical Formula</h2>
+                <p>The prime-phase vector function under investigation:</p>
+                <div class="formula-block">P<sub>t</sub>(M) = Σ<sub>p≤X</sub> [e<sup>2πiγp/M</sup> / p<sup>β</sup>] · e<sup>-iαt·ln(p)</sup></div>
+                <p style="margin-top: 12px;">This function combines modular phase structure (first exponential) with critical line dynamics (second exponential), weighted by a power law decay factor. For detailed parameter explanations and mathematical theory, see the Mathematical Framework tab.</p>
+            </div>
+        </div>
+        
+        <div class="main-container">
         <div class="left-panel">
             <div class="panel">
                 <div class="panel-header">Primary Parameters</div>
                 <div class="panel-content">
                     <div class="control-group">
                         <div class="control-label"><span>Modulus Ring M</span><span class="control-value" id="mValue">37</span></div>
-                        <input type="range" id="modulus" min="5" max="1000" value="37">
-                        <input type="number" id="modulusInput" min="5" max="1000" value="37" style="margin-top: 6px;">
+                        <input type="range" id="modulus" min="5" max="10000" value="37">
+                        <input type="number" id="modulusInput" min="5" max="10000" value="37" style="margin-top: 6px;">
                     </div>
                     <div class="control-group">
                         <div class="control-label"><span>Critical Line Height t</span><span class="control-value" id="tValue">14.1347</span></div>
-                        <input type="range" id="criticalT" min="0" max="100" step="0.0001" value="14.1347">
-                        <input type="number" id="criticalTInput" min="0" max="100" step="0.0001" value="14.1347" style="margin-top: 6px;">
+                        <input type="range" id="criticalT" min="0" max="1000" step="0.0001" value="14.1347">
+                        <input type="number" id="criticalTInput" min="0" max="1000" step="0.0001" value="14.1347" style="margin-top: 6px;">
                     </div>
                     <div class="control-group">
                         <div class="control-label"><span>Prime Cutoff X</span><span class="control-value" id="xValue">200</span></div>
-                        <input type="range" id="primeCutoff" min="20" max="5000" value="200">
-                        <input type="number" id="primeCutoffInput" min="20" max="5000" value="200" style="margin-top: 6px;">
+                        <input type="range" id="primeCutoff" min="20" max="100000" value="200">
+                        <input type="number" id="primeCutoffInput" min="20" max="100000" value="200" style="margin-top: 6px;">
                     </div>
                 </div>
             </div>
@@ -201,18 +165,18 @@
                 <div class="panel-content">
                     <div class="control-group">
                         <div class="control-label"><span>Phase Multiplier α</span><span class="control-value" id="alphaValue">1.0000</span></div>
-                        <input type="range" id="alpha" min="0" max="10" step="0.0001" value="1">
-                        <input type="number" id="alphaInput" min="0" max="10" step="0.0001" value="1" style="margin-top: 6px;">
+                        <input type="range" id="alpha" min="0" max="100" step="0.0001" value="1">
+                        <input type="number" id="alphaInput" min="0" max="100" step="0.0001" value="1" style="margin-top: 6px;">
                     </div>
                     <div class="control-group">
                         <div class="control-label"><span>Magnitude Exponent β</span><span class="control-value" id="betaValue">0.5000</span></div>
-                        <input type="range" id="beta" min="0" max="2" step="0.0001" value="0.5">
-                        <input type="number" id="betaInput" min="0" max="2" step="0.0001" value="0.5" style="margin-top: 6px;">
+                        <input type="range" id="beta" min="0" max="5" step="0.0001" value="0.5">
+                        <input type="number" id="betaInput" min="0" max="5" step="0.0001" value="0.5" style="margin-top: 6px;">
                     </div>
                     <div class="control-group">
                         <div class="control-label"><span>Modular Weight γ</span><span class="control-value" id="gammaValue">1.0000</span></div>
-                        <input type="range" id="gamma" min="0" max="10" step="0.0001" value="1">
-                        <input type="number" id="gammaInput" min="0" max="10" step="0.0001" value="1" style="margin-top: 6px;">
+                        <input type="range" id="gamma" min="0" max="100" step="0.0001" value="1">
+                        <input type="number" id="gammaInput" min="0" max="100" step="0.0001" value="1" style="margin-top: 6px;">
                     </div>
                 </div>
             </div>
@@ -225,11 +189,57 @@
                         <label class="toggle"><input type="checkbox" id="useOEISToggle"><span class="toggle-slider"></span></label>
                     </div>
                     <div class="control-group">
-                        <label style="font-size: 0.8rem; color: #aaa; margin-bottom: 4px; display: block;">OEIS A-Number</label>
-                        <input type="text" id="oeisNumber" placeholder="e.g., A000040" value="A000040">
+                        <label style="font-size: 0.8rem; color: #aaa; margin-bottom: 4px; display: block;">Select Sequence</label>
+                        <select id="oeisNumber" style="margin-bottom: 8px;">
+                            <option value="">-- Choose a sequence --</option>
+                            <optgroup label="Prime Numbers">
+                                <option value="A000040">A000040 - Prime numbers</option>
+                                <option value="A001359">A001359 - Lesser of twin primes</option>
+                                <option value="A006512">A006512 - Greater of twin primes</option>
+                                <option value="A000668">A000668 - Mersenne primes</option>
+                                <option value="A019434">A019434 - Fermat primes</option>
+                            </optgroup>
+                            <optgroup label="Fibonacci & Lucas">
+                                <option value="A000045">A000045 - Fibonacci numbers</option>
+                                <option value="A000032">A000032 - Lucas numbers</option>
+                                <option value="A001519">A001519 - Fibonacci numbers (odd indexed)</option>
+                            </optgroup>
+                            <optgroup label="Powers & Polygonal">
+                                <option value="A000079">A000079 - Powers of 2</option>
+                                <option value="A000244">A000244 - Powers of 3</option>
+                                <option value="A000290">A000290 - Perfect squares</option>
+                                <option value="A000578">A000578 - Perfect cubes</option>
+                                <option value="A000217">A000217 - Triangular numbers</option>
+                                <option value="A000326">A000326 - Pentagonal numbers</option>
+                                <option value="A000384">A000384 - Hexagonal numbers</option>
+                            </optgroup>
+                            <optgroup label="Factorials & Combinatorics">
+                                <option value="A000142">A000142 - Factorial numbers</option>
+                                <option value="A000108">A000108 - Catalan numbers</option>
+                                <option value="A000984">A000984 - Central binomial coefficients</option>
+                            </optgroup>
+                            <optgroup label="Perfect & Abundant">
+                                <option value="A000396">A000396 - Perfect numbers</option>
+                                <option value="A005100">A005100 - Deficient numbers</option>
+                                <option value="A005101">A005101 - Abundant numbers</option>
+                            </optgroup>
+                            <optgroup label="Custom">
+                                <option value="CUSTOM">Enter custom A-number...</option>
+                            </optgroup>
+                        </select>
+                        <input type="text" id="oeisCustom" placeholder="e.g., A000001" style="display: none; margin-bottom: 8px;">
+                    </div>
+                    <div class="control-group">
+                        <label style="font-size: 0.8rem; color: #aaa; margin-bottom: 4px; display: block;">Terms to Fetch</label>
+                        <input type="number" id="oeisTermCount" min="10" max="10000" value="1000" placeholder="10-10000">
                     </div>
                     <button class="btn btn-secondary" onclick="loadOEISSequence()" style="margin-top: 8px;">Load Sequence</button>
                     <div id="oeisStatus" style="font-size: 0.75rem; color: #888; margin-top: 8px; min-height: 20px;"></div>
+                    <div id="oeisInfo" style="font-size: 0.75rem; color: #aaa; margin-top: 8px; padding: 8px; background: #1a1a2a; border-radius: 4px; display: none;">
+                        <div style="color: #ffd700; font-weight: 600; margin-bottom: 4px;">Sequence Info:</div>
+                        <div id="oeisName" style="margin-bottom: 4px;"></div>
+                        <div id="oeisLoaded"></div>
+                    </div>
                 </div>
             </div>
             
@@ -241,7 +251,57 @@
             </div>
             
             <div class="panel" style="margin-top: 16px;">
-                <div class="panel-header">Color Customization</div>
+                <div class="panel-header">Zero Detection & Analysis</div>
+                <div class="panel-content">
+                    <div class="control-group">
+                        <label style="font-size: 0.8rem; color: #aaa; margin-bottom: 4px; display: block;">Scan Range</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <input type="number" id="scanStart" placeholder="Start t" value="0" step="0.1">
+                            <input type="number" id="scanEnd" placeholder="End t" value="100" step="0.1">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label style="font-size: 0.8rem; color: #aaa; margin-bottom: 4px; display: block;">Scan Resolution</label>
+                        <input type="number" id="scanResolution" value="0.1" step="0.01" min="0.01" max="1">
+                    </div>
+                    <button class="btn" onclick="scanForZeros()" style="margin-bottom: 8px;">Scan for Potential Zeros</button>
+                    <div id="zeroScanStatus" style="font-size: 0.75rem; color: #888; min-height: 20px;"></div>
+                    <div id="zeroResults" style="max-height: 150px; overflow-y: auto; margin-top: 8px; display: none;">
+                        <div style="font-size: 0.75rem; color: #ffd700; font-weight: 600; margin-bottom: 4px;">Potential Zeros Found:</div>
+                        <div id="zeroList" style="font-size: 0.75rem;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel" style="margin-top: 16px;">
+                <div class="panel-header">Visualization Mode</div>
+                <div class="panel-content">
+                    <div class="control-group">
+                        <label style="font-size: 0.8rem; color: #aaa; margin-bottom: 4px; display: block;">Display Type</label>
+                        <select id="vizMode" onchange="compute()">
+                            <option value="vector">Vector Path (Default)</option>
+                            <option value="heatmap">Heat Map Density</option>
+                            <option value="spiral">Logarithmic Spiral</option>
+                            <option value="contour">Contour Rings</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label style="font-size: 0.8rem; color: #aaa; margin-bottom: 4px; display: block;">Color Scheme</label>
+                        <select id="colorScheme" onchange="render(); renderPhaseSpace();">
+                            <option value="default">Blue-Red Gradient</option>
+                            <option value="fire">Fire (Yellow-Orange-Red)</option>
+                            <option value="plasma">Plasma (Purple-Pink-Yellow)</option>
+                            <option value="viridis">Viridis (Purple-Green-Yellow)</option>
+                            <option value="cool">Cool (Cyan-Blue-Purple)</option>
+                            <option value="thermal">Thermal (Black-Red-Yellow-White)</option>
+                        </select>
+                    </div>
+                    <div class="toggle-row">
+                        <label>Show Density Overlay</label>
+                        <label class="toggle"><input type="checkbox" id="showDensity"><span class="toggle-slider"></span></label>
+                    </div>
+                </div>
+            </div>
                 <div class="panel-content">
                     <div class="toggle-row">
                         <label>Depth Gradient Coloring</label>
@@ -430,8 +490,181 @@
         </div>
     </div>
     
+    <div id="documentationTab" class="tab-content">
+        <div class="documentation">
+            <div class="doc-section">
+                <h2>Mathematical Framework</h2>
+                
+                <h3>Parameter Definitions</h3>
+                <ul>
+                    <li><strong>M (Modulus Ring):</strong> The modular arithmetic base defining the residue class structure. Range: 5 to 10,000. This parameter controls the periodic spacing of phases in the complex plane.</li>
+                    <li><strong>t (Critical Line Height):</strong> The imaginary component of the Riemann zeta function argument s = 1/2 + it. Range: 0 to 1,000. When t corresponds to a Riemann zero, special cancellation patterns emerge. The tool includes 1,000 precomputed Riemann zeros.</li>
+                    <li><strong>X (Prime Cutoff):</strong> The upper bound for prime summation. Range: 20 to 100,000. Larger values provide more complete vector sums but require more computational resources.</li>
+                    <li><strong>α (Phase Multiplier):</strong> Scaling factor for the critical line phase component. Range: 0 to 100. Standard value is 1, but variations reveal phase sensitivity.</li>
+                    <li><strong>β (Magnitude Exponent):</strong> Power law exponent controlling magnitude decay. Range: 0 to 5. The classical value β = 1/2 corresponds to the critical line of ζ(s).</li>
+                    <li><strong>γ (Modular Weight):</strong> Coefficient controlling the influence of modular phase structure relative to critical line dynamics. Range: 0 to 100.</li>
+                </ul>
+                
+                <h3>Vector Construction</h3>
+                <p>For each prime p ≤ X, we construct a complex vector with two phase components:</p>
+                <ul>
+                    <li><strong>Modular Phase:</strong> θ<sub>mod</sub> = 2πγp/M, creating a discrete rotational structure based on residue classes.</li>
+                    <li><strong>Critical Phase:</strong> θ<sub>crit</sub> = -αt·ln(p), encoding the logarithmic growth structure tied to the Riemann zeta function.</li>
+                    <li><strong>Magnitude:</strong> |v<sub>p</sub>| = 1/p<sup>β</sup>, implementing a power law decay matching the analytic structure of L-functions.</li>
+                </ul>
+                
+                <h3>Statistical Metrics</h3>
+                <p>The tool computes real-time diagnostic statistics to quantify vector behavior:</p>
+                <ul>
+                    <li><strong>Total Magnitude |P<sub>t</sub>|:</strong> The norm of the final cumulative vector, measuring net constructive interference.</li>
+                    <li><strong>Coherence Score:</strong> C<sub>t</sub> = 1 - (|P<sub>t</sub>| / Σ|v<sub>p</sub>|), quantifying destructive interference. Values near 1 indicate strong cancellation.</li>
+                    <li><strong>Path Length:</strong> Σ|v<sub>p</sub>|, the total distance traversed by the cumulative vector tip through the complex plane.</li>
+                    <li><strong>Efficiency Ratio:</strong> |P<sub>t</sub>| / Σ|v<sub>p</sub>|, the ratio of direct distance to total path length. Low values indicate circuitous paths with cancellation.</li>
+                    <li><strong>Maximum Excursion:</strong> The furthest distance the cumulative vector reaches from the origin during summation.</li>
+                    <li><strong>Winding Number:</strong> The total angular rotation of the cumulative vector divided by 2π. Non-integer values reveal complex phase dynamics.</li>
+                    <li><strong>Cancellation Index:</strong> 1 - (|P<sub>t</sub>| / Σ|v<sub>p</sub>|), an alternative measure of interference strength.</li>
+                </ul>
+            </div>
+            
+            <div class="doc-section">
+                <h2>Research Applications</h2>
+                <p>This tool enables investigation of several key mathematical questions:</p>
+                <ul>
+                    <li><strong>Riemann Hypothesis Connection:</strong> By setting t to known Riemann zeros and exploring parameter space, we can identify modular structures that exhibit enhanced cancellation, potentially revealing algebraic or geometric properties of the zeros.</li>
+                    <li><strong>Prime Distribution Patterns:</strong> The cumulative vector path visualizes how prime residue patterns interact with logarithmic phase spacing, offering geometric insight into number-theoretic phenomena.</li>
+                    <li><strong>Modular-Analytic Correspondence:</strong> The interplay between discrete modular structure (M, γ) and continuous analytic structure (t, α, β) may illuminate connections between algebraic number theory and complex analysis.</li>
+                    <li><strong>Phase Transition Detection:</strong> Monitoring statistics like coherence and winding number as parameters vary can reveal critical thresholds where qualitative behavior changes.</li>
+                </ul>
+            </div>
+            
+            <div class="doc-section">
+                <h2>Interactive Features</h2>
+                <ul>
+                    <li><strong>Real-Time Visualization:</strong> All three canvases (main vector space, phase space, magnitude history) update dynamically as parameters change.</li>
+                    <li><strong>Riemann Zero Presets:</strong> One-click navigation to the first 1,000 non-trivial Riemann zeros for immediate investigation of zero-correlated behavior.</li>
+                    <li><strong>Animation Mode:</strong> Automated scanning through t-parameter space with adjustable speed, enabling observation of continuous transitions.</li>
+                    <li><strong>Adaptive Legends:</strong> Each canvas includes a dynamic legend displaying current parameters and key statistics without visual overlap.</li>
+                    <li><strong>Zoom and Pan:</strong> Mouse wheel zoom and click-drag panning for detailed examination of vector structures.</li>
+                    <li><strong>Color Customization:</strong> Full control over vector path, grid, result vector, and background colors for optimal visual clarity and presentation.</li>
+                    <li><strong>High-Resolution Export:</strong> PNG export at 4K resolution (3840×2160) for publication-quality figures, plus SVG for vector graphics and CSV for numerical data.</li>
+                    <li><strong>OEIS Integration:</strong> Load custom integer sequences from the Online Encyclopedia of Integer Sequences to replace prime numbers with other mathematically significant sequences.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div id="creditsTab" class="tab-content">
+        <div class="documentation">
+            <div class="doc-section">
+                <h2>Credits & Attribution</h2>
+                
+                <h3>Primary Developer</h3>
+                <p><strong>Wessen Getachew</strong> (@7dview)</p>
+                <ul>
+                    <li>Twitter/X: <a href="https://twitter.com/7dview" target="_blank" style="color: #ffd700;">@7dview</a></li>
+                    <li>GitHub: <a href="https://wessengetachew.github.io" target="_blank" style="color: #ffd700;">wessengetachew.github.io</a></li>
+                </ul>
+                <p>Independent mathematical researcher and software developer specializing in interactive visualization tools for advanced number theory concepts. Self-taught in complex mathematical domains including Riemann Hypothesis exploration, prime distribution theory, and modular arithmetic structures.</p>
+            </div>
+            
+            <div class="doc-section">
+                <h2>Mathematical Foundations</h2>
+                
+                <h3>Riemann Zeta Function</h3>
+                <p>The Riemann zeta function ζ(s) and its connection to prime numbers forms the theoretical foundation of this tool. The non-trivial zeros of ζ(s) lie on the critical line Re(s) = 1/2, a conjecture known as the Riemann Hypothesis.</p>
+                <ul>
+                    <li><strong>Riemann, Bernhard (1859):</strong> "Über die Anzahl der Primzahlen unter einer gegebenen Größe" - The foundational paper introducing the zeta function and its connection to primes.</li>
+                    <li><strong>Zero Data Source:</strong> The first 1,000 non-trivial zeros are precomputed from established mathematical tables and verified computational sources.</li>
+                </ul>
+                
+                <h3>Modular Arithmetic & Number Theory</h3>
+                <ul>
+                    <li><strong>Farey Sequences:</strong> Connections to rational approximations and continued fractions.</li>
+                    <li><strong>Dirichlet Characters:</strong> Modular structures related to L-functions and prime distribution in arithmetic progressions.</li>
+                    <li><strong>Euler's Totient Function:</strong> φ(n) counting coprime integers, fundamental to modular arithmetic analysis.</li>
+                </ul>
+                
+                <h3>Complex Analysis</h3>
+                <p>Vector summation in the complex plane provides geometric interpretation of analytic number theory:</p>
+                <ul>
+                    <li><strong>Euler Product Formula:</strong> Connection between primes and zeta function values.</li>
+                    <li><strong>Phase Space Analysis:</strong> Geometric representation of complex function behavior.</li>
+                    <li><strong>Winding Number Theory:</strong> Topological invariants in complex analysis.</li>
+                </ul>
+            </div>
+            
+            <div class="doc-section">
+                <h2>Technical Implementation</h2>
+                
+                <h3>Algorithms & Computation</h3>
+                <ul>
+                    <li><strong>Sieve of Eratosthenes:</strong> Classical algorithm for efficient prime number generation up to 100,000.</li>
+                    <li><strong>Complex Vector Summation:</strong> Real-time computation of cumulative vector paths with phase and magnitude tracking.</li>
+                    <li><strong>Statistical Analysis:</strong> Coherence metrics, winding numbers, and efficiency ratios computed on-the-fly.</li>
+                </ul>
+                
+                <h3>Visualization Technologies</h3>
+                <ul>
+                    <li><strong>HTML5 Canvas:</strong> High-performance 2D graphics rendering for complex visualizations.</li>
+                    <li><strong>JavaScript ES6+:</strong> Modern web technologies enabling real-time parameter manipulation.</li>
+                    <li><strong>Adaptive Legends:</strong> Dynamic positioning system to prevent visual overlap with data.</li>
+                    <li><strong>Export Capabilities:</strong> PNG (4K resolution), SVG (vector graphics), and CSV (numerical data).</li>
+                </ul>
+                
+                <h3>External Integrations</h3>
+                <ul>
+                    <li><strong>OEIS (Online Encyclopedia of Integer Sequences):</strong> API integration for loading mathematical sequences beyond primes. Visit <a href="https://oeis.org" target="_blank" style="color: #ffd700;">oeis.org</a></li>
+                </ul>
+            </div>
+            
+            <div class="doc-section">
+                <h2>Research Context</h2>
+                
+                <h3>Related Projects</h3>
+                <p>This tool is part of a broader research program exploring geometric and algebraic approaches to classical number theory problems:</p>
+                <ul>
+                    <li><strong>Farey Triangle & Cayley Transform:</strong> Hyperbolic geometry and conformal mappings in number theory.</li>
+                    <li><strong>Modular Rings Visualization:</strong> Geometric representation of residue class structures.</li>
+                    <li><strong>Interactive Modular Lifting Rings:</strong> Exploring Riemann Hypothesis connections through modular arithmetic.</li>
+                    <li><strong>Modular Sieve Calculator:</strong> Computing π and ζ(2n) using Euler product decompositions.</li>
+                </ul>
+                
+                <h3>Educational Mission</h3>
+                <p>These visualization tools serve dual purposes: advancing mathematical research through computational exploration and making complex concepts accessible to students and researchers. By bridging abstract theory with intuitive geometric representation, the tools facilitate deeper understanding of fundamental mathematical structures.</p>
+            </div>
+            
+            <div class="doc-section">
+                <h2>License & Usage</h2>
+                <p>This visualization tool is created for mathematical research and educational purposes. Users are encouraged to:</p>
+                <ul>
+                    <li>Explore parameter spaces to discover novel patterns</li>
+                    <li>Export high-resolution visualizations for academic presentations</li>
+                    <li>Share findings with the mathematical community</li>
+                    <li>Provide feedback and suggestions for improvements</li>
+                </ul>
+                <p><strong>Citation:</strong> When using this tool in academic work, please credit Wessen Getachew (@7dview) and reference the tool's GitHub repository.</p>
+            </div>
+            
+            <div class="doc-section">
+                <h2>Acknowledgments</h2>
+                <p>Development of this tool benefited from:</p>
+                <ul>
+                    <li>The global mathematics research community and publicly available mathematical datasets</li>
+                    <li>Open-source software libraries and web standards enabling sophisticated browser-based computation</li>
+                    <li>Historical mathematical work spanning centuries, from Euler to Riemann to contemporary researchers</li>
+                    <li>The Online Encyclopedia of Integer Sequences (OEIS) for providing comprehensive sequence data</li>
+                </ul>
+                
+                <p style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #2a2a4a; color: #888; font-size: 0.9rem;">
+                    <strong>Version:</strong> 1.0 | <strong>Last Updated:</strong> 2025<br>
+                    For questions, collaborations, or bug reports, contact via Twitter/X @7dview
+                </p>
+            </div>
+        </div>
+    </div>
+    
     <script>
-        const riemannZeros = [14.134725,21.022040,25.010858,30.424876,32.935062,37.586178,40.918720,43.327073,48.005151,49.773832,52.970321,56.446248,59.347044,60.831779,65.112544,67.079811,69.546402,72.067158,75.704691,77.144840,79.337375,82.910381,84.735493,87.425274,88.809111,92.491899,94.651344,95.870634,98.831194,101.317851,103.725538,105.446623,107.168611,111.029535,111.874659,114.320220,116.226680,118.790782,121.370125,122.946829,124.256819,127.516683,129.578704,131.087688,133.497737,134.756509,138.116042,139.736208,141.123707,143.111845,146.000982,147.422765,150.053183,150.925257,153.024693,156.112909,157.597591,158.849988,161.188964,163.030709,165.537069,167.184439,169.094515,169.911976,173.411536,174.754191,176.441434,178.377407,179.916484,182.207078,184.874467,185.598783,187.228922,189.416158,192.026656,193.079726,195.265396,196.876481,198.015309,201.264751,202.493594,204.189671,205.394698,207.906258,209.576509,211.690862,213.347919,214.547044,216.169538,219.067596,220.714918,221.430705,224.006751,224.983324,227.421444,229.337413,231.250188,231.987235,233.693027,236.524229,237.769132,239.551545,241.049219,242.879463,244.070508,246.017930,247.056525,248.074508,249.134370,251.014402];
+        const riemannZeros = [14.134725,21.022040,25.010858,30.424876,32.935062,37.586178,40.918720,43.327073,48.005151,49.773832,52.970321,56.446248,59.347044,60.831779,65.112544,67.079811,69.546402,72.067158,75.704691,77.144840,79.337375,82.910381,84.735493,87.425274,88.809111,92.491899,94.651344,95.870634,98.831194,101.317851,103.725538,105.446623,107.168611,111.029535,111.874659,114.320220,116.226680,118.790782,121.370125,122.946829,124.256819,127.516683,129.578704,131.087688,133.497737,134.756509,138.116042,139.736208,141.123707,143.111845,146.000982,147.422765,150.053183,150.925257,153.024693,156.112909,157.597591,158.849988,161.188964,163.030709,165.537069,167.184439,169.094515,169.911976,173.411536,174.754191,176.441434,178.377407,179.916484,182.207078,184.874467,185.598783,187.228922,189.416158,192.026656,193.079726,195.265396,196.876481,198.015309,201.264751,202.493594,204.189671,205.394698,207.906258,209.576509,211.690862,213.347919,214.547044,216.169538,219.067596,220.714918,221.430705,224.006751,224.983324,227.421444,229.337413,231.250188,231.987235,233.693027,236.524229,237.769132,239.551545,241.049219,242.879463,244.070508,246.017930,247.056525,248.074508,249.134370,251.014402,254.633730,256.446220,257.404996,260.779021,262.847840,264.650788,265.575190,267.312681,270.106661,270.977518,273.318964,274.849125,276.643089,278.169761,279.469851,281.461723,282.456164,284.104524,286.089500,287.554029,289.323975,290.550286,292.329420,293.530878,295.034266,296.927215,297.851685,299.823289,301.013838,302.456009,303.726029,304.882105,306.827468,307.793553,309.269966,310.811865,312.093403,313.190417,314.879889,315.826038,317.327726,318.823749,319.813173,321.374679,322.358713,323.840879,325.279543,326.319612,327.751935,328.889724,329.975469,331.351234,332.413975,333.557321,334.832932,336.038236,337.227204,338.357431,339.482937,340.701037,341.826874,343.014370,344.181759,345.352264,346.553230,347.701598,348.878990,350.082479,351.219131,352.443266,353.591808,354.776330,355.907073,357.134473,358.236889,359.454088,360.616783,361.707603,362.890532,364.044729,365.169355,366.355191,367.486832,368.657764,369.799405,370.955821,372.072803,373.229675,374.364036,375.543788,376.662048,377.813734,378.944916,380.089611,381.206493,382.348960,383.482943,384.619186,385.733898,386.886336,387.991466,389.127990,390.258652,391.373513,392.505369,393.623669,394.749805,395.872726,396.988159,398.114451,399.227890,400.347728,401.469398,402.588042,403.700197,404.821265,405.936281,407.045949,408.165166,409.275936,410.384886,411.501438,412.611083,413.723957,414.833175,415.944629,417.056010,418.159961,419.269863,420.380075,421.487485,422.593693,423.701493,424.810030,425.912088,427.018901,428.123886,429.231149,430.333959,431.438843,432.544064,433.647423,434.752192,435.857516,436.958789,438.063028,439.167603,440.270556,441.375144,442.478059,443.581655,444.686318,445.789207,446.894098,447.997042,449.100966,450.206264,451.308773,452.413213,453.517038,454.619785,455.723819,456.827426,457.929842,459.033481,460.137117,461.239532,462.342897,463.447083,464.550089,465.653213,466.756838,467.859659,468.963042,470.066634,471.169891,472.273352,473.377078,474.480571,475.584192,476.687791,477.791466,478.895066,479.998856,481.102569,482.206385,483.310106,484.413856,485.517744,486.621488,487.725245,488.829080,489.932925,491.036758,492.140621,493.244511,494.348422,495.452355,496.556313,497.660309,498.764328,499.868383,500.972453,502.076547,503.180665,504.284809,505.388981,506.493192,507.597423,508.701681,509.805976,510.910291,512.014630,513.118997,514.223395,515.327822,516.432275,517.536759,518.641273,519.745809,520.850373,521.954970,523.059592,524.164244,525.268922,526.373630,527.478363,528.583126,529.687912,530.792733,531.897574,533.002440,534.107338,535.212254,536.317201,537.422168,538.527165,539.632184,540.737231,541.842303,542.947401,544.052527,545.157678,546.262857,547.368062,548.473291,549.578551,550.683836,551.789149,552.894489,554.000017,555.105407,556.210889,557.316399,558.421937,559.527500,560.633094,561.738714,562.844363,563.950041,565.055747,566.161478,567.267240,568.373027,569.478848,570.584692,571.690566,572.796464,573.902391,575.008345,576.114329,577.220340,578.326378,579.432449,580.538544,581.644669,582.750821,583.857003,584.963212,586.069450,587.175718,588.282015,589.388340,590.494697,591.601081,592.707498,593.813942,594.920417,596.026920,597.133454,598.240018,599.346611,600.453235,601.559889,602.666574,603.773289,604.880033,605.986811,607.093616,608.200454,609.307322,610.414222,611.521152,612.628116,613.735110,614.842137,615.949195,617.056286,618.163408,619.270563,620.377750,621.484970,622.592222,623.699508,624.806826,625.914177,627.021561,628.128978,629.236430,630.343914,631.451432,632.558983,633.666569,634.774189,635.881842,636.989531,638.097253,639.205011,640.312803,641.420630,642.528491,643.636389,644.744321,645.852289,646.960293,648.068332,649.176407,650.284517,651.392664,652.500847,653.609066,654.717322,655.825614,656.933943,658.042309,659.150712,660.259153,661.367630,662.476145,663.584698,664.693289,665.801917,666.910583,668.019288,669.128031,670.236813,671.345633,672.454492,673.563390,674.672327,675.781304,676.890320,677.999376,679.108472,680.217607,681.326783,682.435999,683.545256,684.654553,685.763891,686.873270,687.982690,689.092151,690.201654,691.311198,692.420784,693.530412,694.640082,695.749794,696.859549,697.969346,699.079186,700.189069,701.298995,702.408965,703.518978,704.629035,705.739136,706.849281,707.959470,709.069704,710.179982,711.290305,712.400673,713.511086,714.621545,715.732049,716.842599,717.953194,719.063836,720.174524,721.285258,722.396039,723.506867,724.617742,725.728663,726.839632,727.950648,729.061712,730.172823,731.283982,732.395189,733.506444,734.617747,735.729099,736.840499,737.951948,739.063445,740.174992,741.286587,742.398232,743.509926,744.621670,745.733464,746.845308,747.957202,749.069146,750.181141,751.293186,752.405282,753.517429,754.629627,755.741877,756.854177,757.966530,759.078933,760.191389,761.303897,762.416456,763.529068,764.641732,765.754449,766.867218,767.980040,769.092915,770.205843,771.318824,772.431859,773.544947,774.658089,775.771284,776.884533,777.997837,779.111194,780.224606,781.338072,782.451593,783.565169,784.678799,785.792485,786.906225,788.020021,789.133873,790.247780,791.361742,792.475761,793.589835,794.703965,795.818152,796.932395,798.046694,799.161051,800.275464,801.389935,802.504462,803.619047,804.733690,805.848391,806.963149,808.077966,809.192841,810.307774,811.422766,812.537817,813.652927,814.768096,815.883325,816.998613,818.113961,819.229369,820.344838,821.460366,822.575955,823.691605,824.807316,825.923088,827.038921,828.154816,829.270772,830.386790,831.502870,832.619012,833.735217,834.851484,835.967814,837.084207,838.200662,839.317181,840.433764,841.550410,842.667120,843.783894,844.900732,846.017634,847.134601,848.251632,849.368728,850.485889,851.603115,852.720407,853.837764,854.955187,856.072676,857.190231,858.307852,859.425540,860.543294,861.661115,862.779003,863.896958,865.014980,866.133070,867.251227,868.369452,869.487745,870.606106,871.724536,872.843034,873.961600,875.080236,876.198940,877.317714,878.436558,879.555471,880.674454,881.793507,882.912630,884.031824,885.151088,886.270423,887.389829,888.509306,889.628855,890.748475,891.868167,892.987931,894.107767,895.227675,896.347656,897.467710,898.587837,899.707937,900.828211,901.948458,903.068779,904.189174,905.309643,906.430186,907.550804,908.671497,909.792265,910.913108,912.034027,913.155021,914.276092,915.397239,916.518462,917.639762,918.761139,919.882593,921.004124,922.125732,923.247418,924.369182,925.491024,926.612944,927.734943,928.857020,929.979176,931.101412,932.223726,933.346120,934.468594,935.591148,936.713782,937.836497,938.959292,940.082168,941.205125,942.328163,943.451283,944.574485,945.697768,946.821134,947.944582,949.068113,950.191727,951.315424,952.439204,953.563067,954.687014,955.811045,956.935160,958.059359,959.183643,960.308011,961.432465,962.557004,963.681628,964.806338,965.931134,967.056016,968.180985,969.306040,970.431183,971.556412,972.681729,973.807134,974.932626,976.058206,977.183875,978.309632,979.435478,980.561413,981.687437,982.813551,983.939754,985.066047,986.192431,987.318905,988.445469,989.572125,990.698872,991.825710,992.952640,994.079662,995.206776,996.333983,997.461282,998.588675,999.716161];
         
         // OEIS sequence storage
         let oeisSequence = [];
@@ -442,6 +675,62 @@
         let historyData = [];
         let isAnimating = false;
         let animationId = null;
+        let densityGrid = null;
+        
+        const colorSchemes = {
+            fire: [
+                {pos: 0, r: 0, g: 0, b: 0},
+                {pos: 0.33, r: 139, g: 0, b: 0},
+                {pos: 0.66, r: 255, g: 69, b: 0},
+                {pos: 0.85, r: 255, g: 165, b: 0},
+                {pos: 1, r: 255, g: 255, b: 100}
+            ],
+            plasma: [
+                {pos: 0, r: 13, g: 8, b: 135},
+                {pos: 0.25, r: 126, g: 3, b: 168},
+                {pos: 0.5, r: 204, g: 71, b: 120},
+                {pos: 0.75, r: 248, g: 149, b: 64},
+                {pos: 1, r: 240, g: 249, b: 33}
+            ],
+            viridis: [
+                {pos: 0, r: 68, g: 1, b: 84},
+                {pos: 0.25, r: 59, g: 82, b: 139},
+                {pos: 0.5, r: 33, g: 145, b: 140},
+                {pos: 0.75, r: 94, g: 201, b: 98},
+                {pos: 1, r: 253, g: 231, b: 37}
+            ],
+            cool: [
+                {pos: 0, r: 0, g: 255, b: 255},
+                {pos: 0.5, r: 100, g: 100, b: 255},
+                {pos: 1, r: 255, g: 0, b: 255}
+            ],
+            thermal: [
+                {pos: 0, r: 0, g: 0, b: 0},
+                {pos: 0.33, r: 139, g: 0, b: 0},
+                {pos: 0.66, r: 255, g: 140, b: 0},
+                {pos: 0.9, r: 255, g: 255, b: 0},
+                {pos: 1, r: 255, g: 255, b: 255}
+            ]
+        };
+        
+        function getColorFromScheme(scheme, t) {
+            if (!colorSchemes[scheme]) return {r: 100, g: 200, b: 255};
+            
+            const colors = colorSchemes[scheme];
+            t = Math.max(0, Math.min(1, t));
+            
+            for (let i = 0; i < colors.length - 1; i++) {
+                if (t >= colors[i].pos && t <= colors[i + 1].pos) {
+                    const localT = (t - colors[i].pos) / (colors[i + 1].pos - colors[i].pos);
+                    return {
+                        r: Math.round(colors[i].r + (colors[i + 1].r - colors[i].r) * localT),
+                        g: Math.round(colors[i].g + (colors[i + 1].g - colors[i].g) * localT),
+                        b: Math.round(colors[i].b + (colors[i + 1].b - colors[i].b) * localT)
+                    };
+                }
+            }
+            return colors[colors.length - 1];
+        }
         
         // Zoom and pan state for each canvas
         const canvasStates = {
@@ -449,6 +738,77 @@
             phase: { zoom: 1, offsetX: 0, offsetY: 0, isDragging: false, lastX: 0, lastY: 0 },
             history: { zoom: 1, offsetX: 0, offsetY: 0, isDragging: false, lastX: 0, lastY: 0 }
         };
+        
+        function scanForZeros() {
+            const start = parseFloat(document.getElementById('scanStart').value);
+            const end = parseFloat(document.getElementById('scanEnd').value);
+            const resolution = parseFloat(document.getElementById('scanResolution').value);
+            const statusEl = document.getElementById('zeroScanStatus');
+            const resultsEl = document.getElementById('zeroResults');
+            const listEl = document.getElementById('zeroList');
+            
+            if (isNaN(start) || isNaN(end) || start >= end) {
+                statusEl.textContent = 'Invalid range. Start must be less than end.';
+                statusEl.style.color = '#ff6464';
+                return;
+            }
+            
+            statusEl.textContent = 'Scanning for zeros...';
+            statusEl.style.color = '#ffd700';
+            resultsEl.style.display = 'none';
+            
+            const potentialZeros = [];
+            let minMagnitude = Infinity;
+            let minT = start;
+            
+            // Store current parameters
+            const origT = parseFloat(document.getElementById('criticalT').value);
+            
+            // Scan through range
+            for (let t = start; t <= end; t += resolution) {
+                document.getElementById('criticalT').value = t;
+                compute();
+                
+                const magnitude = parseFloat(document.getElementById('statMagnitude').textContent);
+                
+                if (magnitude < minMagnitude) {
+                    minMagnitude = magnitude;
+                    minT = t;
+                }
+                
+                // Look for local minima (potential zeros)
+                if (magnitude < 0.01) {
+                    potentialZeros.push({t: t.toFixed(6), magnitude: magnitude.toFixed(8)});
+                }
+            }
+            
+            // Restore original t
+            document.getElementById('criticalT').value = origT;
+            compute();
+            
+            if (potentialZeros.length > 0) {
+                statusEl.textContent = `Found ${potentialZeros.length} potential zero(s)`;
+                statusEl.style.color = '#64ff64';
+                resultsEl.style.display = 'block';
+                
+                listEl.innerHTML = '';
+                potentialZeros.forEach(z => {
+                    const btn = document.createElement('button');
+                    btn.className = 'zero-btn';
+                    btn.textContent = `t ≈ ${z.t} (|P| = ${z.magnitude})`;
+                    btn.onclick = () => {
+                        document.getElementById('criticalT').value = z.t;
+                        document.getElementById('tValue').textContent = parseFloat(z.t).toFixed(4);
+                        compute();
+                    };
+                    listEl.appendChild(btn);
+                });
+            } else {
+                statusEl.textContent = `No strong zeros found. Minimum at t ≈ ${minT.toFixed(4)} (|P| = ${minMagnitude.toFixed(6)})`;
+                statusEl.style.color = '#ffaa00';
+                resultsEl.style.display = 'none';
+            }
+        }
         
         function sievePrimes(max) {
             const sieve = new Array(max + 1).fill(true);
@@ -478,41 +838,116 @@
         
         function loadOEISSequence() {
             const oeisNum = document.getElementById('oeisNumber').value.trim().toUpperCase();
+            const termCount = parseInt(document.getElementById('oeisTermCount').value) || 1000;
             const statusEl = document.getElementById('oeisStatus');
+            const infoEl = document.getElementById('oeisInfo');
+            const nameEl = document.getElementById('oeisName');
+            const loadedEl = document.getElementById('oeisLoaded');
             
             if (!oeisNum.match(/^A\d{6}$/)) {
-                statusEl.textContent = 'Invalid format. Use A000000 format.';
+                statusEl.textContent = 'Invalid format. Use A000000 format (e.g., A000040 for primes).';
                 statusEl.style.color = '#ff6464';
+                infoEl.style.display = 'none';
                 return;
             }
             
-            statusEl.textContent = 'Loading from OEIS...';
+            statusEl.textContent = `Loading ${termCount} terms from OEIS...`;
             statusEl.style.color = '#ffd700';
+            infoEl.style.display = 'none';
             
-            fetch(`https://oeis.org/search?q=id:${oeisNum}&fmt=json`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.results && data.results.length > 0) {
-                        const sequence = data.results[0].data.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n) && n > 0);
-                        if (sequence.length > 0) {
-                            oeisSequence = sequence;
-                            statusEl.textContent = `Loaded ${sequence.length} terms from ${oeisNum}`;
+            // First, try to get the b-file which contains many more terms
+            const bFileUrl = `https://oeis.org/${oeisNum}/b${oeisNum.substring(1)}.txt`;
+            
+            fetch(bFileUrl)
+                .then(response => {
+                    if (response.ok) {
+                        return response.text().then(text => ({source: 'bfile', data: text}));
+                    }
+                    // If b-file fails, fall back to JSON API
+                    return fetch(`https://oeis.org/search?q=id:${oeisNum}&fmt=json`)
+                        .then(r => r.json())
+                        .then(json => ({source: 'json', data: json}));
+                })
+                .then(result => {
+                    let sequence = [];
+                    let sequenceName = '';
+                    
+                    if (result.source === 'bfile') {
+                        // Parse b-file format: "n a(n)" on each line
+                        const lines = result.data.split('\n');
+                        for (let line of lines) {
+                            line = line.trim();
+                            if (line && !line.startsWith('#')) {
+                                const parts = line.split(/\s+/);
+                                if (parts.length >= 2) {
+                                    const value = parseInt(parts[1]);
+                                    if (!isNaN(value) && value > 0) {
+                                        sequence.push(value);
+                                        if (sequence.length >= termCount) break;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Get sequence name from JSON API
+                        fetch(`https://oeis.org/search?q=id:${oeisNum}&fmt=json`)
+                            .then(r => r.json())
+                            .then(json => {
+                                if (json.results && json.results.length > 0) {
+                                    sequenceName = json.results[0].name;
+                                }
+                                displaySequenceInfo(sequence, sequenceName, 'b-file');
+                            })
+                            .catch(() => {
+                                displaySequenceInfo(sequence, 'Extended b-file sequence', 'b-file');
+                            });
+                    } else if (result.source === 'json') {
+                        // Parse JSON API response
+                        if (result.data.results && result.data.results.length > 0) {
+                            const seqData = result.data.results[0];
+                            sequenceName = seqData.name;
+                            
+                            // Parse the data field
+                            const dataStr = seqData.data;
+                            sequence = dataStr.split(',')
+                                .map(s => parseInt(s.trim()))
+                                .filter(n => !isNaN(n) && n > 0)
+                                .slice(0, termCount);
+                            
+                            displaySequenceInfo(sequence, sequenceName, 'JSON API');
+                        } else {
+                            throw new Error('Sequence not found');
+                        }
+                    }
+                    
+                    function displaySequenceInfo(seq, name, source) {
+                        if (seq.length > 0) {
+                            oeisSequence = seq;
+                            statusEl.textContent = `✓ Successfully loaded ${seq.length} terms`;
                             statusEl.style.color = '#64ff64';
+                            
+                            infoEl.style.display = 'block';
+                            nameEl.textContent = name || 'OEIS Sequence';
+                            loadedEl.textContent = `Loaded: ${seq.length} terms (from ${source})`;
+                            
+                            // Show first few terms as preview
+                            const preview = seq.slice(0, 10).join(', ');
+                            loadedEl.textContent += `\nFirst terms: ${preview}${seq.length > 10 ? '...' : ''}`;
+                            
                             if (document.getElementById('useOEISToggle').checked) {
                                 compute();
                             }
                         } else {
-                            statusEl.textContent = 'No valid numeric data found.';
+                            statusEl.textContent = 'No valid numeric data found in sequence.';
                             statusEl.style.color = '#ff6464';
+                            infoEl.style.display = 'none';
                         }
-                    } else {
-                        statusEl.textContent = 'Sequence not found.';
-                        statusEl.style.color = '#ff6464';
                     }
                 })
                 .catch(error => {
-                    statusEl.textContent = 'Error loading sequence. Check connection.';
+                    statusEl.textContent = 'Error: Unable to load sequence. Check OEIS number and connection.';
                     statusEl.style.color = '#ff6464';
+                    infoEl.style.display = 'none';
                     console.error('OEIS fetch error:', error);
                 });
         }
@@ -671,6 +1106,7 @@
             const w = canvas.width, h = canvas.height;
             const cx = w / 2, cy = h / 2;
             const state = canvasStates.main;
+            const vizMode = document.getElementById('vizMode').value;
             
             ctx.save();
             ctx.fillStyle = '#000';
@@ -687,6 +1123,7 @@
             const maxDist = Math.max(...pathData.map(p => Math.max(Math.abs(p.re), Math.abs(p.im))), 1);
             const scale = Math.min(w, h) * 0.35 / maxDist;
             
+            // Draw grid
             const gridColor = hexToRgb(document.getElementById('gridColor').value);
             const gridOpacity = parseInt(document.getElementById('gridOpacity').value) / 100;
             
@@ -705,40 +1142,48 @@
                 ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, h); ctx.stroke();
             }
             
-            if (document.getElementById('showPath').checked) {
-                const opacity = parseInt(document.getElementById('pathOpacity').value) / 100;
-                const useGradient = document.getElementById('useGradient').checked;
-                
-                if (useGradient) {
-                    const pathStartColor = hexToRgb(document.getElementById('pathColor').value);
-                    const pathEndColor = hexToRgb(document.getElementById('pathEndColor').value);
+            const colorScheme = document.getElementById('colorScheme').value;
+            const useGradient = document.getElementById('useGradient').checked;
+            
+            if (vizMode === 'heatmap') {
+                renderHeatMap(ctx, cx, cy, scale, colorScheme);
+            } else if (vizMode === 'spiral') {
+                renderSpiral(ctx, cx, cy, scale, colorScheme);
+            } else if (vizMode === 'contour') {
+                renderContours(ctx, cx, cy, scale, colorScheme);
+            } else {
+                // Default vector path
+                if (document.getElementById('showPath').checked) {
+                    const opacity = parseInt(document.getElementById('pathOpacity').value) / 100;
                     
-                    ctx.lineWidth = 2 / state.zoom;
-                    for (let i = 1; i < pathData.length; i++) {
-                        const t = i / (pathData.length - 1);
-                        const r = Math.round(pathStartColor.r + (pathEndColor.r - pathStartColor.r) * t);
-                        const g = Math.round(pathStartColor.g + (pathEndColor.g - pathStartColor.g) * t);
-                        const b = Math.round(pathStartColor.b + (pathEndColor.b - pathStartColor.b) * t);
-                        
-                        ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
-                        ctx.beginPath();
-                        ctx.moveTo(cx + pathData[i-1].re * scale, cy - pathData[i-1].im * scale);
-                        ctx.lineTo(cx + pathData[i].re * scale, cy - pathData[i].im * scale);
-                        ctx.stroke();
+                    if (useGradient || colorScheme !== 'default') {
+                        ctx.lineWidth = 2 / state.zoom;
+                        for (let i = 1; i < pathData.length; i++) {
+                            const t = i / (pathData.length - 1);
+                            let color;
+                            
+                            if (colorScheme === 'default') {
+                                const pathStartColor = hexToRgb(document.getElementById('pathColor').value);
+                                const pathEndColor = hexToRgb(document.getElementById('pathEndColor').value);
+                                const r = Math.round(pathStartColor.r + (pathEndColor.r - pathStartColor.r) * t);
+                                const g = Math.round(pathStartColor.g + (pathEndColor.g - pathStartColor.g) * t);
+                                const b = Math.round(pathStartColor.b + (pathEndColor.b - pathStartColor.b) * t);
+                                color = {r, g, b};
+                            } else {
+                                color = getColorFromScheme(colorScheme, t);
+                            }
+                            
+                            ctx.strokeStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${opacity})`;
+                            ctx.beginPath();
+                            ctx.moveTo(cx + pathData[i-1].re * scale, cy - pathData[i-1].im * scale);
+                            ctx.lineTo(cx + pathData[i].re * scale, cy - pathData[i].im * scale);
+                            ctx.stroke();
+                        }
                     }
-                } else {
-                    const pathColor = hexToRgb(document.getElementById('pathColor').value);
-                    ctx.strokeStyle = `rgba(${pathColor.r}, ${pathColor.g}, ${pathColor.b}, ${opacity})`;
-                    ctx.lineWidth = 2 / state.zoom;
-                    ctx.beginPath();
-                    ctx.moveTo(cx, cy);
-                    pathData.forEach(p => {
-                        ctx.lineTo(cx + p.re * scale, cy - p.im * scale);
-                    });
-                    ctx.stroke();
                 }
             }
             
+            // Draw origin and result vector
             const originColor = hexToRgb(document.getElementById('originColor').value);
             ctx.beginPath();
             ctx.arc(cx, cy, 6 / state.zoom, 0, 2 * Math.PI);
@@ -786,6 +1231,76 @@
                 { label: 'Primes', value: primeCount },
                 { label: 'Magnitude', value: document.getElementById('statMagnitude').textContent }
             ]);
+        }
+        
+        function renderHeatMap(ctx, cx, cy, scale, colorScheme) {
+            const gridSize = 100;
+            const cellSize = Math.min(canvas.width, canvas.height) / gridSize;
+            const density = new Array(gridSize).fill(0).map(() => new Array(gridSize).fill(0));
+            
+            // Calculate density
+            pathData.forEach(p => {
+                const x = Math.floor((p.re * scale + cx) / cellSize);
+                const y = Math.floor((cy - p.im * scale) / cellSize);
+                if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
+                    density[y][x]++;
+                }
+            });
+            
+            const maxDensity = Math.max(...density.flat());
+            
+            // Draw heat map
+            for (let y = 0; y < gridSize; y++) {
+                for (let x = 0; x < gridSize; x++) {
+                    if (density[y][x] > 0) {
+                        const t = density[y][x] / maxDensity;
+                        const color = colorScheme === 'default' ? 
+                            {r: Math.round(255 * t), g: Math.round(100 * (1-t)), b: Math.round(100 * (1-t))} :
+                            getColorFromScheme(colorScheme, t);
+                        
+                        ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, 0.7)`;
+                        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+                    }
+                }
+            }
+        }
+        
+        function renderSpiral(ctx, cx, cy, scale, colorScheme) {
+            ctx.lineWidth = 2;
+            for (let i = 1; i < pathData.length; i++) {
+                const t = i / (pathData.length - 1);
+                const color = colorScheme === 'default' ?
+                    {r: 100, g: 200, b: 255} :
+                    getColorFromScheme(colorScheme, t);
+                
+                const r1 = Math.sqrt(pathData[i-1].re * pathData[i-1].re + pathData[i-1].im * pathData[i-1].im);
+                const theta1 = Math.atan2(pathData[i-1].im, pathData[i-1].re);
+                const r2 = Math.sqrt(pathData[i].re * pathData[i].re + pathData[i].im * pathData[i].im);
+                const theta2 = Math.atan2(pathData[i].im, pathData[i].re);
+                
+                ctx.strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+                ctx.beginPath();
+                ctx.arc(cx, cy, r1 * scale, theta1, theta2);
+                ctx.stroke();
+            }
+        }
+        
+        function renderContours(ctx, cx, cy, scale, colorScheme) {
+            const distances = pathData.map(p => Math.sqrt(p.re * p.re + p.im * p.im));
+            const maxDist = Math.max(...distances);
+            
+            for (let level = 0.1; level <= 1; level += 0.1) {
+                const r = level * maxDist * scale;
+                const color = colorScheme === 'default' ?
+                    {r: Math.round(255 * level), g: Math.round(200 * (1-level)), b: 100} :
+                    getColorFromScheme(colorScheme, level);
+                
+                ctx.strokeStyle = `rgba(${color.r}, ${color.g}, ${color.b}, 0.6)`;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+                ctx.stroke();
+            }
         }
         
         function renderPhaseSpace() {
@@ -1162,7 +1677,7 @@
             const slider = document.getElementById('criticalT');
             const speed = parseFloat(document.getElementById('animSpeed').value) * 0.01;
             let t = parseFloat(slider.value) + speed;
-            if (t > 100) t = 0;
+            if (t > 1000) t = 0;
             slider.value = t;
             document.getElementById('tValue').textContent = t.toFixed(4);
             compute();
@@ -1227,12 +1742,15 @@
             }
         });
         
-        ['showPath', 'showGrid', 'showLegend', 'useGradient'].forEach(id => {
-            document.getElementById(id).addEventListener('change', () => {
-                render();
-                renderPhaseSpace();
-                renderHistory();
-            });
+        ['showPath', 'showGrid', 'showLegend', 'useGradient', 'showDensity'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('change', () => {
+                    render();
+                    renderPhaseSpace();
+                    renderHistory();
+                });
+            }
         });
         
         document.getElementById('useOEISToggle').addEventListener('change', () => {
@@ -1256,8 +1774,16 @@
         setupCanvasInteraction('phaseCanvas', 'phase');
         setupCanvasInteraction('historyCanvas', 'history');
         
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+        
         initZeros();
         compute();
     </script>
 </body>
-    </html>
+                    </html>
